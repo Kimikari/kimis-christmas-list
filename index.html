@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Kimi's Christmas List</title>
+<meta name="description" content="Kimi's Christmas list: what to get and where to buy it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%84%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #0f2a22; --card: #fffdf8; --ink: #1d2a26; --muted: #5d6b66;
+    --red: #b3262b; --green: #1f6b4f; --gold: #d9a441; --line: #e6dfd0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  header { color: #fff; text-align: center; padding: 36px 16px 20px; }
+  header h1 { margin: 0; font-size: clamp(1.9rem, 6vw, 3rem); letter-spacing: .01em; }
+  header p { margin: 8px auto 0; max-width: 620px; color: #d5e4dc; }
+  .lights { font-size: 1.3rem; letter-spacing: .5em; margin-bottom: 8px; }
+  nav {
+    position: sticky; top: 0; z-index: 2; background: var(--bg);
+    display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 16px;
+    justify-content: center; border-bottom: 1px solid #244a3d;
+  }
+  nav button {
+    flex: none; border: 1px solid #3c6a5a; background: transparent; color: #e8f1ec;
+    padding: 7px 14px; border-radius: 999px; font: inherit; cursor: pointer;
+  }
+  nav button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  nav button[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: #2a1f05; font-weight: 600; }
+  main { max-width: 1080px; margin: 0 auto; padding: 18px 14px 40px; }
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); }
+  .card {
+    background: var(--card); border-radius: 14px; padding: 16px 16px 14px;
+    display: flex; flex-direction: column; border-top: 5px solid var(--red);
+  }
+  .card[hidden] { display: none; }
+  .card:nth-child(even) { border-top-color: var(--green); }
+  .size { font-size: .85rem; color: var(--muted); margin: 0 0 8px; }
+  .cat { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .card h2 { margin: 2px 0 10px; font-size: 1.15rem; }
+  .pick { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .pick .name { font-weight: 650; }
+  .price { font-weight: 700; color: var(--red); white-space: nowrap; }
+  .why { margin: 6px 0 10px; color: #33423d; font-size: .95rem; }
+  .buy {
+    display: inline-block; background: var(--green); color: #fff; text-decoration: none;
+    padding: 8px 14px; border-radius: 9px; font-weight: 600; margin: 0 6px 6px 0;
+  }
+  .buy:hover, .buy:focus { background: #174f3b; }
+  .alts { margin: 8px 0 0; padding: 10px 0 0; border-top: 1px dashed var(--line); list-style: none; font-size: .92rem; }
+  .alts li { margin-bottom: 7px; }
+  .alts .tag { font-weight: 650; }
+  .alts a, .src a, footer a { color: var(--green); }
+  .src { margin-top: auto; padding-top: 8px; font-size: .8rem; color: var(--muted); }
+  .note { background: #fff6dc; border-radius: 8px; padding: 7px 10px; font-size: .88rem; margin: 2px 0 8px; }
+  footer { color: #c8d8d0; text-align: center; font-size: .85rem; padding: 0 16px 40px; max-width: 760px; margin: 0 auto; }
+  footer a { color: #f0cf85; }
+  noscript p { color: #fff; text-align: center; padding: 20px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="lights" aria-hidden="true">🎄⭐🎁</div>
+  <h1>Kimi's Christmas List</h1>
+  <p>Each card has one pick and where to buy it, often with a cheaper or better option. Prices were checked on <strong>November 25, 2026</strong> and will move, so look before you buy.</p>
+</header>
+<nav id="filters" aria-label="Filter by category"></nav>
+<main><div class="grid" id="grid"></div></main>
+<noscript><p>This page needs JavaScript to show the list.</p></noscript>
+<footer>
+  <p>Prices marked ≈ come from a review or a sale notice and were not seen on the shop's page. Clothing and boots: ask Kimi for size and fit first. No link on this page is an affiliate link.</p>
+</footer>
+
+<script>
+"use strict";
+// Each item: cat, title, pick {name, price, shops:[[label,url]]}, why, note (optional), size (optional),
+// alts: [[tag, text, label, url]], src: [[label, url]]
+const A = "https://www.amazon.com/dp/";
+const ITEMS = [
+  { cat: "Sleep", title: "Side-sleeper pillow",
+    pick: { name: "Coop Original Adjustable Pillow (queen)", price: "$66.75 with Prime", shops: [["Buy at Amazon", A + "B00EINBSEW"]] },
+    note: "$89 without Prime.",
+    why: "Wirecutter's top pick for side sleepers after 50+ pillows. You add or remove foam until the height fits, and it has a 100-night trial.",
+    alts: [["Cheaper", "Xtreme Comforts shredded memory foam, $41.99 (Wirecutter's budget pick).", "Amazon", A + "B00V909F1K"]],
+    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-pillow-for-side-sleepers/"]] },
+
+  { cat: "Sleep", title: "Hugging pillow for side sleeping",
+    pick: { name: "Sleep Number Cool ComfortFit Body Pillow", price: "$119.99", shops: [["Buy at Sleep Number", "https://www.sleepnumber.com/products/cool-comfortfit-body-pillow"]] },
+    why: "Wirecutter calls it the most huggable body pillow it tested: soft but supportive between the knees, washable cover, 100-night trial.",
+    alts: [["Cheaper", "Arctic Sleep cooling gel memory foam body pillow, ≈$56. Lumpier and goes flat faster.", "Wayfair", "https://www.wayfair.com/bed-bath/pdp/wayfair-sleep-medium-comfort-cool-gel-memory-foam-standard-cooling-gel-infused-body-pillow-w004536456.html"]],
+    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-body-pillow/"]] },
+
+  { cat: "Gaming", title: "Wireless gaming headset",
+    pick: { name: "Razer BlackShark V2 Pro (2023), black", price: "$92.80", shops: [["Buy at Amazon", A + "B0BY1FXC9N"]] },
+    why: "Less than half its $199.99 list price. Light, 70-hour battery, and Tom's Hardware says it has one of the best headset microphones it has tested.",
+    alts: [["Cheaper", "Logitech G325, $63.99. Wirecutter's best wireless headset under $100; shorter battery life.", "Amazon", A + "B0G12K3GD6"]],
+    src: [["Tom's Hardware", "https://www.tomshardware.com/best-picks/best-wireless-headsets"], ["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-gaming-headset/"]] },
+
+  { cat: "Gaming", title: "Gaming mic + free noise cancelling",
+    pick: { name: "Fifine AmpliGame AM8 (USB dynamic mic)", price: "$44.99", shops: [["Buy at Amazon", A + "B0BMFQP2ZZ"]] },
+    why: "A cardioid dynamic mic you speak into from a few inches away. The noise cancelling comes from NVIDIA Broadcast, a free app for RTX graphics cards.",
+    note: "No independent test of this mic's own noise rejection was found. The pick rests on the free software.",
+    alts: [["Free, nothing to buy", "NVIDIA Broadcast noise removal (needs an RTX card).", "NVIDIA", "https://www.nvidia.com/en-us/geforce/broadcasting/broadcast-app/"],
+           ["Upgrade", "Shure MV6, ≈$145. PC Gamer's best gaming mic, with noise reduction built in.", "Best Buy", "https://www.bestbuy.com/product/shure-mv6-gaming-streaming-usb-microphone-plug-play-no-drivers-no-delays-real-time-denoiser-for-professional-sound-black/J78FTSR8Y2"]],
+    src: [["PC Gamer", "https://www.pcgamer.com/best-microphone-gaming-streaming/"]] },
+
+  { cat: "Chicago winter", title: "Boots that grip on ice",
+    pick: { name: "Kamik Nation Plus snow boots (men's sizes)", price: "$80–100 by size", shops: [["Buy at Amazon", A + "B00AZODA80"]] },
+    size: true,
+    why: "Wirecutter's budget snow boot: waterproof, warm enough for commuting, and better grip than most. Add the cleats below for real ice.",
+    note: "No boot is slip-proof on smooth ice. Cleats are what make the difference; take them off indoors.",
+    alts: [["Add for ice", "Yaktrax ICEtrekkers Diamond Grip cleats, $41.77. Wirecutter's pick for city walking; sized to the boot.", "Amazon", A + "B01BZHF97U"],
+           ["Upgrade", "Baffin Cloud Low, ≈$149. Wirecutter's top boot: warmer, softer tread that grips ice.", "Baffin (men's)", "https://www.baffin.com/en-us/products/easem008"],
+           ["Women's", "Baffin Cloud Low in women's sizes.", "REI", "https://www.rei.com/product/254622/baffin-cloud-low-winter-boots-womens"]],
+    src: [["Wirecutter boots", "https://www.nytimes.com/wirecutter/reviews/best-winter-boots-for-men-and-women/"], ["Wirecutter cleats", "https://www.nytimes.com/wirecutter/reviews/best-ice-cleats/"]] },
+
+  { cat: "Chicago winter", title: "Outer layer (winter coat)",
+    pick: { name: "Columbia Landroamer II parka (men's)", price: "≈$180 (list $240)", shops: [["Buy at REI", "https://www.rei.com/product/236425/columbia-landroamer-ii-insulated-parka-mens"]] },
+    size: true,
+    why: "GearLab's favorite low-cost everyday parka: thigh length, blocks wind and snow, and as warm in its tests as coats twice the price.",
+    note: "GearLab reports 25% off at REI, which makes about $180. It runs large.",
+    alts: [["Women's", "Orolay Thickened Down Jacket, $110–160 by color. One of the warmest GearLab tested, but not waterproof.", "Amazon", A + "B00HHOXRZC"]],
+    src: [["GearLab men's", "https://www.outdoorgearlab.com/topics/clothing-mens/best-winter-jacket-men"], ["GearLab Orolay", "https://www.outdoorgearlab.com/reviews/clothing-womens/winter-jacket-womens/orolay-thickened-down"]] },
+
+  { cat: "Chicago winter", title: "Gloves",
+    pick: { name: "The North Face Montana Ski Gloves", price: "$65–70", shops: [["Men's at REI", "https://www.rei.com/product/239479/the-north-face-montana-ski-gloves-mens"], ["Women's at Amazon", A + "B0F2CXJSG3"]] },
+    size: true,
+    why: "Wirecutter's budget ski glove: warm, water resistant, touchscreen fingertips. Ski gloves are what keep hands warm in wind.",
+    alts: [["For texting", "Moshi Digits touchscreen gloves, $35.95. The warmest touchscreen knit gloves Wirecutter tested; fine for short walks.", "Amazon", A + "B081F74LRM"]],
+    src: [["Wirecutter ski gloves", "https://www.nytimes.com/wirecutter/reviews/best-ski-and-snowboard-gloves/"], ["Wirecutter touchscreen", "https://www.nytimes.com/wirecutter/reviews/best-touchscreen-gloves/"]] },
+
+  { cat: "Chicago winter", title: "Hat",
+    pick: { name: "Carhartt A18 knit cuffed beanie", price: "$19.99", shops: [["Buy at Amazon", A + "B002G9UDYG"]] },
+    why: "CNN Underscored's best winter hat out of 15: one of the warmest it tested and one of the cheapest.",
+    alts: [],
+    src: [["CNN Underscored", "https://www.cnn.com/cnn-underscored/reviews/best-winter-hat"]] },
+
+  { cat: "Chicago winter", title: "Face mask for the wind",
+    pick: { name: "Buff ThermoNet neck gaiter", price: "≈$30", shops: [["Buy at Amazon", A + "B0848XF4TC"]] },
+    why: "Pulls up over the nose and ears under a hat. Wirecutter's guide to bike commuting in foul weather recommends it over a scarf.",
+    note: "No tested roundup of winter face masks was found, so this is the least certain pick on the list.",
+    alts: [],
+    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-rain-gear-for-biking/"]] },
+
+  { cat: "Chicago winter", title: "Warm shirt (base layer)",
+    pick: { name: "REI Co-op Midweight Long-Sleeve Crew base layer", price: "≈$45–49", shops: [["Men's at REI", "https://www.rei.com/search?q=rei+co-op+midweight+long-sleeve+crew+base+layer+top+mens"], ["Women's at REI", "https://www.rei.com/product/C08591/rei-co-op-midweight-long-sleeve-crew-base-layer-top-womens"]] },
+    size: true,
+    why: "Wirecutter's budget thermal top. Worn under a sweater, it does more for warmth than a cotton T-shirt, which stays damp and cold.",
+    alts: [["Upgrade", "Ridge Merino Aspect midweight wool top, ≈$60–80. Wirecutter's top pick.", "Ridge Merino", "https://www.ridgemerino.com/"]],
+    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-mens-base-layers-and-thermal-underwear/"]] },
+
+  { cat: "Chicago winter", title: "Warm pants",
+    pick: { name: "Carhartt Relaxed Straight Lined Jean (men's)", price: "$54.99", shops: [["Buy at Amazon", A + "B0B4F1J941"]] },
+    size: true,
+    why: "Flannel-lined jeans at less than half the price of CNN Underscored's winners. A clear step up from plain jeans; they run tight in the hips.",
+    alts: [["Warmest", "Patagonia Iron Forge fleece-lined work pants, ≈$125. The warmest men's pair CNN tested.", "Patagonia", "https://www.patagonia.com/product/mens-iron-forge-fleece-lined-5-pocket-work-pants-regular/196924591356.html"],
+           ["Women's", "Duluth Heritage Hi-Rise Lined Straight Leg Jeans, ≈$110.", "Duluth", "https://www.duluthtrading.com/womens-duluth-heritage-hi-rise-lined-straight-leg-jeans-55306.html"]],
+    src: [["CNN Underscored", "https://www.cnn.com/cnn-underscored/reviews/best-winter-pants"]] },
+
+  { cat: "Chicago winter", title: "Socks",
+    pick: { name: "Darn Tough Light Hiker Micro Crew (merino)", price: "≈$25 a pair", shops: [["Men's at Amazon", A + "B07N1T79DP"], ["Women's at Amazon", A + "B0DC4PNBZK"]] },
+    size: true,
+    why: "Wirecutter's top sock. Merino wool stays warm when damp and does not smell, and Darn Tough replaces worn-out pairs for life.",
+    alts: [],
+    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-hiking-socks/"]] },
+
+  { cat: "Kitchen", title: "Hand towel that dries fast",
+    pick: { name: "Aunt Martha's flour sack towels (7 pack)", price: "$24.99", shops: [["Buy at Amazon", A + "B0018N9A8G"]] },
+    why: "Thin cotton dries faster than terry cloth, so it stays fresh longer between washes. Seven towels means a dry one is always hanging.",
+    note: "No towel skips the laundry. A fast-drying one just smells clean for longer.",
+    alts: [["Thicker", "Williams Sonoma All Purpose Pantry Towels, ≈$25 for 4. Wirecutter's top kitchen towel: more absorbent, slower to dry.", "Williams Sonoma", "https://www.williams-sonoma.com/products/all-purpose-pantry-towels/"]],
+    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-kitchen-towels/"]] },
+
+  { cat: "Kitchen", title: "Rolling knife sharpener",
+    pick: { name: "The Original Tumbler rolling sharpener", price: "$96.75", shops: [["Buy at Amazon", A + "B0CGGVHBQG"]] },
+    why: "The cheapest of the three big names, with the strongest magnet and a lifetime warranty. Good results on kitchen knives in two separate tests.",
+    note: "The discs cannot be replaced when they wear out.",
+    alts: [["Alternative", "Work Sharp Rolling Knife Sharpener, $101.96. Outdoor Life ranked it best, Prudent Reviews measured it worst: testers disagree.", "Amazon", A + "B0CHLKHK9L"]],
+    src: [["Prudent Reviews", "https://prudentreviews.com/horl-2-vs-tumbler-vs-work-sharp/"], ["Outdoor Life", "https://www.outdoorlife.com/gear/best-rolling-knife-sharpeners/"]] },
+
+  { cat: "Kitchen", title: "Breading trays",
+    pick: { name: "Nordic Ware Naturals eighth sheet pans (get 3)", price: "$22.47 for 3", shops: [["Buy at Amazon", A + "B079Q1GT7H"]] },
+    note: "$7.49 each; set the quantity to 3.",
+    why: "Three small rimmed pans make a flour, egg and crumb line, then go on being useful for baking and prep. Sturdier than a single-use gadget.",
+    alts: [["Dedicated set", "Hulisen interlocking breading trays, set of 3, $17.39. No independent test found.", "Amazon", A + "B08L4HS2XH"]],
+    src: [["Wirecutter (the pans)", "https://www.nytimes.com/wirecutter/reviews/best-cookie-sheet/"]] },
+
+  { cat: "Kitchen", title: "Deep fryer that filters its oil",
+    pick: { name: "T-fal Ultimate EZ Clean fryer, 3.5 L", price: "$104.44", shops: [["Buy at Amazon", A + "B00NQ7QFGM"]] },
+    why: "America's Test Kitchen's winner. When the oil cools it drains through a filter into a sealed box under the fryer, leaving the crumbs behind.",
+    note: "It cleans and stores used oil. Fresh oil stays in its own bottle; no home fryer was found that holds both.",
+    alts: [],
+    src: [["America's Test Kitchen", "https://www.americastestkitchen.com/equipment_reviews/2118-electric-deep-fryers"]] },
+
+  { cat: "Kitchen", title: "Rice cooker",
+    pick: { name: "Aroma Select Stainless rice cooker, 3-cup", price: "$37.99", shops: [["Buy at Amazon", A + "B007TNXYYA"]] },
+    why: "Wirecutter's pick for small batches: 3 cups of dry rice makes 6 cooked. One switch, stainless pot that goes in the dishwasher.",
+    alts: [["Bigger", "Aroma Select Stainless ARC-757SG, 7 cups dry / 14 cooked, $55. Wirecutter's budget pick.", "Amazon", A + "B007WQ9Z56"],
+           ["Upgrade", "Zojirushi NL-EAC10, $149.62. Wirecutter's top pick: the best jasmine rice it tested, but slow.", "Amazon", A + "B0FKQNJKLX"]],
+    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/the-best-rice-cooker/"]] },
+
+  { cat: "Pets", title: "Cat tree",
+    pick: { name: "Feandrea 33.1-inch cat tower", price: "$44.73", shops: [["Buy at Amazon", A + "B0795T91YP"]] },
+    why: "Wirecutter's budget pick: wide top perch, big cave doors, washable cushion and a wall strap. For cats up to about 15 lb.",
+    alts: [["Buy once", "New Cat Condos Large Cat Tree, $163.99. Wirecutter's top pick: solid wood posts, over 5 feet tall, built for big cats.", "New Cat Condos", "https://www.newcatcondos.com/large-cat-tree-for-multiple-cats-solid-wood-cat-tower-for-large-cats"]],
+    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-cat-trees/"]] },
+
+  { cat: "Pets", title: "Toys for both small dogs and cats",
+    pick: { name: "Nina Ottosson Dog Brick treat puzzle", price: "$11.02", shops: [["Buy at Amazon", A + "B0711Y9XTF"]] },
+    why: "Pets slide and flip covers to find treats. Sold for dogs, and Wirecutter's cat-gift guide uses it with cats too.",
+    note: "Use it with one pet at a time, with treats made for that animal, and put it away afterwards.",
+    alts: [["Also good", "LickiMat Classic slow feeder, $9.99. A lick mat made in cat and small-dog versions.", "LickiMat", "https://lickimat.us/products/cat-classic-feeder"]],
+    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/gifts/best-gifts-for-cats/"]] },
+];
+
+const el = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+};
+const link = (label, url, cls) => {
+  const a = el("a", cls, label);
+  a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
+  return a;
+};
+
+function card(it) {
+  const c = el("article", "card");
+  c.dataset.cat = it.cat;
+  c.append(el("div", "cat", it.cat), el("h2", null, it.title));
+  const p = el("div", "pick");
+  p.append(el("span", "name", it.pick.name), el("span", "price", it.pick.price));
+  c.append(p, el("p", "why", it.why));
+  if (it.note) c.append(el("div", "note", it.note));
+  if (it.size) c.append(el("p", "size", "Ask Kimi for size and fit before ordering."));
+  const shops = el("div");
+  for (const [label, url] of it.pick.shops) shops.append(link(label, url, "buy"));
+  c.append(shops);
+  if (it.alts.length) {
+    const ul = el("ul", "alts");
+    for (const [tag, text, label, url] of it.alts) {
+      const li = el("li");
+      li.append(el("span", "tag", tag + ": "), document.createTextNode(text + " "), link(label, url));
+      ul.append(li);
+    }
+    c.append(ul);
+  }
+  const s = el("div", "src", "Why this one: ");
+  it.src.forEach(([label, url], i) => { if (i) s.append(", "); s.append(link(label, url)); });
+  c.append(s);
+  return c;
+}
+
+const grid = document.getElementById("grid");
+ITEMS.forEach(it => grid.append(card(it)));
+
+const cats = ["All", ...new Set(ITEMS.map(it => it.cat))];
+const nav = document.getElementById("filters");
+function show(cat) {
+  for (const b of nav.children) b.setAttribute("aria-pressed", String(b.textContent === cat));
+  for (const c of grid.children) c.hidden = cat !== "All" && c.dataset.cat !== cat;
+}
+function pick(cat) {
+  show(cat);
+  // The page gets shorter when cards are hidden: bring the list back into view.
+  if (window.scrollY > nav.offsetTop) window.scrollTo(0, nav.offsetTop);
+}
+for (const cat of cats) {
+  const b = el("button", null, cat);
+  b.type = "button";
+  b.addEventListener("click", () => pick(cat));
+  nav.append(b);
+}
+show("All");
+</script>
+</body>
+</html>
