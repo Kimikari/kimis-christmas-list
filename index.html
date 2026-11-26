@@ -5,288 +5,714 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Kimi's Christmas List</title>
-<meta name="description" content="Kimi's Christmas list: what to get and where to buy it.">
+<meta name="description" content="Kimi's Christmas list: what to get, where to buy it, and what is already bought.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%84%3C/text%3E%3C/svg%3E">
 <style>
   :root {
-    --bg: #0f2a22; --card: #fffdf8; --ink: #1d2a26; --muted: #5d6b66;
-    --red: #b3262b; --green: #1f6b4f; --gold: #d9a441; --line: #e6dfd0;
+    --bg: #0c2420; --bg2: #123a30; --card: #fffdf8; --ink: #1d2a26; --muted: #5d6b66;
+    --red: #b3262b; --green: #1f6b4f; --gold: #e0ad4a; --line: #e6dfd0;
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
-    margin: 0; background: var(--bg); color: var(--ink);
-    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    margin: 0; color: var(--ink); min-height: 100vh;
+    background: radial-gradient(1200px 600px at 50% -100px, #1c5a48 0%, var(--bg2) 40%, var(--bg) 100%) fixed var(--bg);
+    font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
-  header { color: #fff; text-align: center; padding: 36px 16px 20px; }
-  header h1 { margin: 0; font-size: clamp(1.9rem, 6vw, 3rem); letter-spacing: .01em; }
-  header p { margin: 8px auto 0; max-width: 620px; color: #d5e4dc; }
-  .lights { font-size: 1.3rem; letter-spacing: .5em; margin-bottom: 8px; }
-  nav {
-    position: sticky; top: 0; z-index: 2; background: var(--bg);
-    display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 16px;
-    justify-content: center; border-bottom: 1px solid #244a3d;
+  button, select, input { font: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  #snow { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  header, .bar, main, footer { position: relative; z-index: 1; }
+
+  /* String lights: tap to change them */
+  .lights {
+    display: flex; justify-content: space-around; width: 100%; padding: 0 6px; margin: 0; height: 34px;
+    background: none; border: 0; border-top: 2px solid #06140f; position: relative; z-index: 1;
   }
-  nav button {
-    flex: none; border: 1px solid #3c6a5a; background: transparent; color: #e8f1ec;
-    padding: 7px 14px; border-radius: 999px; font: inherit; cursor: pointer;
+  .lights i {
+    width: 12px; height: 18px; border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; margin-top: 5px;
+    background: var(--c); box-shadow: 0 0 10px 2px var(--c); animation: glow 3.2s ease-in-out infinite;
+    position: relative;
   }
-  nav button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-  nav button[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: #2a1f05; font-weight: 600; }
-  main { max-width: 1080px; margin: 0 auto; padding: 18px 14px 40px; }
-  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); }
+  .lights i::before { content: ""; position: absolute; top: -5px; left: 3px; width: 6px; height: 5px; background: #06140f; border-radius: 2px; }
+  .lights i:nth-child(3n) { animation-delay: -1s; }
+  .lights i:nth-child(3n+1) { animation-delay: -2.1s; }
+  .lights i:nth-child(n+13) { display: none; }
+  @media (min-width: 700px) { .lights i:nth-child(n+13) { display: block; } }
+  .lights[data-mode="warm"] i { --c: #ffd27a !important; }
+  .lights[data-mode="off"] i { background: #3a4a44; box-shadow: none; animation: none; }
+  @keyframes glow { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+
+  header { color: #fff; text-align: center; padding: 14px 16px 10px; }
+  header h1 { margin: 0; font-size: clamp(2rem, 7vw, 3.2rem); letter-spacing: .01em; text-shadow: 0 2px 0 #0006; }
+  header h1 span { display: inline-block; }
+  header h1 .tree { cursor: pointer; background: none; border: 0; padding: 0; font-size: inherit; }
+  header h1 .tree:active { transform: scale(.9) rotate(-8deg); }
+  .count { display: inline-flex; gap: 8px; margin: 10px 0 2px; }
+  .count div { background: #0006; border: 1px solid #3c6a5a; border-radius: 10px; padding: 5px 10px; min-width: 62px; }
+  .count b { display: block; font-size: 1.35rem; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .count small { color: #cfe0d8; font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; }
+  .sub { margin: 8px auto 0; max-width: 620px; color: #d5e4dc; font-size: .93rem; }
+  .sub b { color: #fff; }
+
+  /* Sleigh progress */
+  .track { max-width: 620px; margin: 12px auto 0; }
+  .track[hidden] { display: none; }
+  .track .rail { height: 10px; background: #0007; border-radius: 99px; position: relative; border: 1px solid #3c6a5a; }
+  .track .fill { height: 100%; width: 0; border-radius: 99px; background: repeating-linear-gradient(45deg, var(--red) 0 10px, #fff 10px 20px); transition: width .8s cubic-bezier(.2,.9,.3,1.2); }
+  .track .sleigh { position: absolute; top: -17px; left: 0; font-size: 1.5rem; transform: translateX(-50%) scaleX(-1); transition: left .8s cubic-bezier(.2,.9,.3,1.2); }
+  .track p { margin: 6px 0 0; color: #e8f1ec; font-size: .9rem; }
+
+  .bar {
+    position: sticky; top: 0; z-index: 3; background: #0c2420f2; backdrop-filter: blur(6px);
+    padding: 8px 10px; border-bottom: 1px solid #244a3d; border-top: 1px solid #244a3d; margin-top: 12px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .chips button {
+    flex: none; border: 1px solid #3c6a5a; background: #ffffff0d; color: #e8f1ec;
+    padding: 8px 12px; border-radius: 999px; min-height: 44px; transition: transform .15s;
+  }
+  .chips button:active { transform: scale(.94); }
+  .chips button[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: #2a1f05; font-weight: 650; }
+  .tools { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: center; color: #e8f1ec; font-size: .9rem; padding: 10px 12px 0; }
+  .tools label { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+  .tools select { background: #123a30; color: #fff; border: 1px solid #3c6a5a; border-radius: 8px; padding: 6px 8px; min-height: 44px; }
+  .tools input[type=range] { width: 130px; height: 44px; accent-color: var(--gold); }
+  .tools output { min-width: 4.2em; font-weight: 650; color: var(--gold); }
+  .santa { background: var(--red); color: #fff; border: 0; border-radius: 999px; padding: 8px 14px; font-weight: 650; min-height: 44px; box-shadow: 0 2px 0 #6d1418; }
+  .santa:active { transform: translateY(2px); box-shadow: none; }
+
+  .banner { max-width: 1080px; margin: 12px auto 0; padding: 0 14px; }
+  .banner div { background: #fff1c9; border-left: 5px solid var(--gold); border-radius: 8px; padding: 9px 12px; font-size: .92rem; }
+  .banner[hidden] { display: none; }
+
+  main { max-width: 1080px; margin: 0 auto; padding: 16px 14px 30px; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); }
+  .empty { color: #e8f1ec; text-align: center; padding: 30px 10px; }
+  .empty[hidden] { display: none; }
+
   .card {
-    background: var(--card); border-radius: 14px; padding: 16px 16px 14px;
-    display: flex; flex-direction: column; border-top: 5px solid var(--red);
+    background: var(--card); border-radius: 16px; padding: 14px 14px 12px; position: relative;
+    display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: 0 4px 0 #0005; transition: transform .18s, box-shadow .18s;
+    animation: pop .45s backwards cubic-bezier(.2,.9,.3,1.3);
   }
-  .card[hidden] { display: none; }
-  .card:nth-child(even) { border-top-color: var(--green); }
-  .size { font-size: .85rem; color: var(--muted); margin: 0 0 8px; }
-  .cat { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
-  .card h2 { margin: 2px 0 10px; font-size: 1.15rem; }
-  .pick { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
-  .pick .name { font-weight: 650; }
-  .price { font-weight: 700; color: var(--red); white-space: nowrap; }
-  .why { margin: 6px 0 10px; color: #33423d; font-size: .95rem; }
-  .buy {
-    display: inline-block; background: var(--green); color: #fff; text-decoration: none;
-    padding: 8px 14px; border-radius: 9px; font-weight: 600; margin: 0 6px 6px 0;
+  .card[hidden], .got[hidden] { display: none; }
+  .card.in { animation: none; }
+  .card.picked { outline: 4px solid var(--gold); outline-offset: 2px; }
+  @media (hover: hover) { .card:hover { transform: translateY(-4px) rotate(-.4deg); box-shadow: 0 9px 0 #0005; } .card:hover .emoji { transform: scale(1.18) rotate(8deg); } }
+  @keyframes pop { from { opacity: 0; transform: translateY(14px) scale(.96); } }
+  .card.spot { animation: spot 1.6s; }
+  @keyframes spot { 0%, 100% { box-shadow: 0 4px 0 #0005; } 20%, 70% { box-shadow: 0 0 0 5px var(--gold), 0 0 30px 8px #e0ad4a99; transform: scale(1.03); } }
+  .top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .emoji { font-size: 2.3rem; line-height: 1; transition: transform .2s; flex: none; }
+  .cat { font-size: .7rem; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); }
+  .card h2 { margin: 0; font-size: 1.08rem; line-height: 1.2; }
+  .name { font-size: .93rem; color: #33423d; margin: 0 0 8px; }
+  .off {
+    position: absolute; top: 10px; right: -34px; transform: rotate(40deg); background: var(--red); color: #fff;
+    font-weight: 750; font-size: .82rem; padding: 3px 38px; box-shadow: 0 2px 4px #0003;
   }
-  .buy:hover, .buy:focus { background: #174f3b; }
-  .alts { margin: 8px 0 0; padding: 10px 0 0; border-top: 1px dashed var(--line); list-style: none; font-size: .92rem; }
-  .alts li { margin-bottom: 7px; }
-  .alts .tag { font-weight: 650; }
-  .alts a, .src a, footer a { color: var(--green); }
-  .src { margin-top: auto; padding-top: 8px; font-size: .8rem; color: var(--muted); }
-  .note { background: #fff6dc; border-radius: 8px; padding: 7px 10px; font-size: .88rem; margin: 2px 0 8px; }
-  footer { color: #c8d8d0; text-align: center; font-size: .85rem; padding: 0 16px 40px; max-width: 760px; margin: 0 auto; }
-  footer a { color: #f0cf85; }
+  .prices { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 9px; margin-bottom: 2px; }
+  .now { font-size: 1.5rem; font-weight: 800; color: var(--red); font-variant-numeric: tabular-nums; }
+  .was { color: var(--muted); font-size: .9rem; }
+  .was s { text-decoration-thickness: 1.5px; }
+  .save { background: #e3f2e9; color: #14553d; font-weight: 650; font-size: .8rem; padding: 2px 8px; border-radius: 99px; }
+  .save.prime { background: #fff1c9; color: #6b4a00; }
+  .fresh { font-size: .75rem; color: var(--muted); margin: 0 0 8px; min-height: 1em; }
+  .fresh .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #2ea66f; margin-right: 5px; animation: glow 2.4s infinite; }
+  .fresh.old .dot, .fresh.fixed .dot { background: #b9b2a0; animation: none; }
+  .tags { list-style: none; margin: 0 0 10px; padding: 0; font-size: .84rem; color: #33423d; }
+  .tags li { background: #fff6dc; border-radius: 7px; padding: 4px 9px; margin-bottom: 4px; }
+  .acts { margin-top: auto; display: grid; gap: 7px; }
+  .buy, .got {
+    display: block; text-align: center; border-radius: 10px; padding: 10px 12px; font-weight: 650; min-height: 44px; border: 0; width: 100%;
+  }
+  .buy { background: var(--green); color: #fff; text-decoration: none; box-shadow: 0 3px 0 #134533; }
+  .buy:active { transform: translateY(3px); box-shadow: none; }
+  .got { background: #fff; color: var(--red); border: 2px dashed var(--red); }
+  .got.ask { background: var(--red); color: #fff; border-style: solid; animation: nudge .5s; }
+  .got:disabled { opacity: .6; cursor: progress; }
+  @keyframes nudge { 30% { transform: scale(1.04); } }
+  .msg { font-size: .8rem; color: var(--red); min-height: 0; margin: 0; }
+
+  /* A bought gift is wrapped */
+  .card.bought { background: repeating-linear-gradient(135deg, #a82328 0 18px, #b92c31 18px 36px); color: #fff; }
+  .card.bought::before { content: ""; position: absolute; inset: 0 auto 0 50%; width: 26px; margin-left: -13px; background: linear-gradient(90deg, #c9952f, #f2cf7a, #c9952f); opacity: .9; }
+  .card.bought::after { content: "🎀"; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); font-size: 2.6rem; }
+  .card.bought > * { position: relative; z-index: 1; }
+  .card.bought .top { margin-top: 30px; }
+  .card.bought .cat, .card.bought .name { color: #ffe3e3; }
+  .card.bought .prices, .card.bought .fresh, .card.bought .tags, .card.bought .buy, .card.bought .off { display: none; }
+  .card.bought .top, .card.bought .name, .wrapped { background: #7d151aee; border-radius: 10px; padding: 6px 10px; }
+  .wrapped { font-weight: 750; text-align: center; margin: 0 0 10px; }
+  .card:not(.bought) .wrapped { display: none; }
+  .card.bought .got { background: transparent; color: #ffe3e3; border: 0; text-decoration: underline; font-weight: 500; font-size: .85rem; min-height: 40px; }
+  .card.bought .got.ask { background: #fff; color: var(--red); text-decoration: none; font-weight: 650; }
+  .card.bought .msg { color: #fff; }
+  .card.wrapnow { animation: wrap .7s cubic-bezier(.2,.9,.3,1.4); }
+  @keyframes wrap { 0% { transform: scale(.8) rotate(-6deg); } 60% { transform: scale(1.06) rotate(2deg); } }
+
+  .bit { position: fixed; z-index: 9; pointer-events: none; font-size: 1.4rem; animation: fly 1.4s ease-out forwards; }
+  @keyframes fly { to { transform: translate(var(--dx), var(--dy)) rotate(var(--r)); opacity: 0; } }
+
+  footer { color: #c8d8d0; text-align: center; font-size: .84rem; padding: 0 16px 44px; max-width: 760px; margin: 0 auto; }
+  footer button { background: none; border: 1px solid #3c6a5a; color: #e8f1ec; border-radius: 99px; padding: 8px 14px; margin: 4px; min-height: 44px; }
+  footer button[aria-pressed="true"] { background: var(--gold); color: #2a1f05; border-color: var(--gold); }
   noscript p { color: #fff; text-align: center; padding: 20px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
 </head>
 <body>
+<canvas id="snow" aria-hidden="true"></canvas>
+<button class="lights" id="lights" type="button" aria-label="Christmas lights: tap to change them" title="Tap the lights"></button>
 <header>
-  <div class="lights" aria-hidden="true">🎄⭐🎁</div>
-  <h1>Kimi's Christmas List</h1>
-  <p>Each card has one pick and where to buy it, often with a cheaper or better option. Prices were checked on <strong>November 25, 2026</strong> and will move, so look before you buy.</p>
+  <h1><button class="tree" id="tree" type="button" aria-label="Shake the tree">🎄</button> <span>Kimi's Christmas List</span></h1>
+  <div class="count" id="count" role="timer" aria-live="off"></div>
+  <p class="sub" id="sub">Tap <b>Buy</b> to open the shop. After you order, tap <b>I bought this</b> so nobody buys it twice.</p>
+  <div class="track" id="track" hidden>
+    <div class="rail"><div class="fill" id="fill"></div><span class="sleigh" id="sleigh" aria-hidden="true">🛷</span></div>
+    <p id="trackText"></p>
+  </div>
 </header>
-<nav id="filters" aria-label="Filter by category"></nav>
-<main><div class="grid" id="grid"></div></main>
+
+<div class="bar">
+  <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+</div>
+<div class="tools">
+    <label>Budget <input type="range" id="budget" min="10" max="130" step="5" value="130" aria-describedby="budgetOut"> <output id="budgetOut" for="budget">any</output></label>
+    <label>Sort <select id="sort">
+      <option value="list">Kimi's order</option>
+      <option value="off">Biggest discount</option>
+      <option value="low">Price: low to high</option>
+      <option value="high">Price: high to low</option>
+    </select></label>
+    <button class="santa" id="santa" type="button">🎅 Pick one for me</button>
+</div>
+
+<div class="banner" id="banner" hidden><div id="bannerText"></div></div>
+<main>
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="empty" hidden>Nothing fits that. Raise the budget or pick another category. ☃️</p>
+</main>
 <noscript><p>This page needs JavaScript to show the list.</p></noscript>
+<p class="sr" id="live" role="status" aria-live="polite"></p>
+
 <footer>
-  <p>Prices marked ≈ come from a review or a sale notice and were not seen on the shop's page. Clothing and boots: ask Kimi for size and fit first. No link on this page is an affiliate link.</p>
+  <p id="priceNote"></p>
+  <p>A price tracker reads the shops' own pages about once an hour, so a price here can be up to an hour or so behind; the shop's checkout decides. A price with ≈ is not tracked. No link here is an affiliate link.</p>
+  <p>
+    <button type="button" id="snowBtn" aria-pressed="true">❄️ Snow</button>
+    <button type="button" id="kimiBtn" aria-pressed="false">🙈 I'm Kimi: hide what's bought</button>
+  </p>
 </footer>
 
 <script>
 "use strict";
-// Each item: cat, title, pick {name, price, shops:[[label,url]]}, why, note (optional), size (optional),
-// alts: [[tag, text, label, url]], src: [[label, url]]
+/* ---------- The list ----------
+   id: never change one (it ties a gift to its price and to its "bought" mark).
+   price/list: the prices seen on 2026-11-25, used until the tracked prices load.
+   tracked: the price is read from the shop by tools/prices.mjs. qty: how many to buy.
+   tags: short facts a buyer needs (size, color, quantity); no reasons. */
 const A = "https://www.amazon.com/dp/";
 const ITEMS = [
-  { cat: "Sleep", title: "Side-sleeper pillow",
-    pick: { name: "Coop Original Adjustable Pillow (queen)", price: "$66.75 with Prime", shops: [["Buy at Amazon", A + "B00EINBSEW"]] },
-    note: "$89 without Prime.",
-    why: "Wirecutter's top pick for side sleepers after 50+ pillows. You add or remove foam until the height fits, and it has a 100-night trial.",
-    alts: [["Cheaper", "Xtreme Comforts shredded memory foam, $41.99 (Wirecutter's budget pick).", "Amazon", A + "B00V909F1K"]],
-    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-pillow-for-side-sleepers/"]] },
+  { id: "side-pillow", cat: "Sleep", emoji: "🛏️", title: "Side-sleeper pillow", name: "Coop Original Adjustable Pillow, queen",
+    price: 66.75, list: 89, prime: true, tracked: true, shop: ["Amazon", A + "B00EINBSEW"], tags: [] },
+  { id: "body-pillow", cat: "Sleep", emoji: "🧸", title: "Hugging body pillow", name: "Sleep Number Cool ComfortFit Body Pillow",
+    price: 119.99, tracked: true, shop: ["Sleep Number", "https://www.sleepnumber.com/products/cool-comfortfit-body-pillow"], tags: [] },
 
-  { cat: "Sleep", title: "Hugging pillow for side sleeping",
-    pick: { name: "Sleep Number Cool ComfortFit Body Pillow", price: "$119.99", shops: [["Buy at Sleep Number", "https://www.sleepnumber.com/products/cool-comfortfit-body-pillow"]] },
-    why: "Wirecutter calls it the most huggable body pillow it tested: soft but supportive between the knees, washable cover, 100-night trial.",
-    alts: [["Cheaper", "Arctic Sleep cooling gel memory foam body pillow, ≈$56. Lumpier and goes flat faster.", "Wayfair", "https://www.wayfair.com/bed-bath/pdp/wayfair-sleep-medium-comfort-cool-gel-memory-foam-standard-cooling-gel-infused-body-pillow-w004536456.html"]],
-    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-body-pillow/"]] },
+  { id: "headset", cat: "Gaming", emoji: "🎧", title: "Wireless gaming headset", name: "Razer BlackShark V2 Pro (2023)",
+    price: 92.80, list: 199.99, tracked: true, shop: ["Amazon", A + "B0BY1FXC9N"], tags: ["Color: black"] },
+  { id: "mic", cat: "Gaming", emoji: "🎙️", title: "Gaming mic", name: "Fifine AmpliGame AM8 USB dynamic mic",
+    price: 44.99, list: 56.99, tracked: true, shop: ["Amazon", A + "B0BMFQP2ZZ"], tags: ["Color: black"] },
 
-  { cat: "Gaming", title: "Wireless gaming headset",
-    pick: { name: "Razer BlackShark V2 Pro (2023), black", price: "$92.80", shops: [["Buy at Amazon", A + "B0BY1FXC9N"]] },
-    why: "Less than half its $199.99 list price. Light, 70-hour battery, and Tom's Hardware says it has one of the best headset microphones it has tested.",
-    alts: [["Cheaper", "Logitech G325, $63.99. Wirecutter's best wireless headset under $100; shorter battery life.", "Amazon", A + "B0G12K3GD6"]],
-    src: [["Tom's Hardware", "https://www.tomshardware.com/best-picks/best-wireless-headsets"], ["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-gaming-headset/"]] },
+  { id: "boots", cat: "Winter", emoji: "🥾", title: "Boots that grip on ice", name: "Kamik Nation Plus snow boots, men's",
+    price: 79.99, list: 99.99, tracked: true, shop: ["Amazon", A + "B00AZODA80"], tags: ["Ask Kimi for his size and color", "Price changes with size"] },
+  { id: "cleats", cat: "Winter", emoji: "🧊", title: "Ice cleats for the boots", name: "Yaktrax ICEtrekkers Diamond Grip",
+    price: 41.77, list: 63.99, tracked: true, shop: ["Amazon", A + "B01BZHF97U"], tags: ["Sized to the boot: ask Kimi"] },
+  { id: "coat", cat: "Winter", emoji: "🧥", title: "Winter coat", name: "Columbia Landroamer II parka, men's",
+    price: 180, list: 240, approx: true, shop: ["REI", "https://www.rei.com/product/236425/columbia-landroamer-ii-insulated-parka-mens"], tags: ["Ask Kimi for his size and color", "Runs large"] },
+  { id: "gloves", cat: "Winter", emoji: "🧤", title: "Gloves", name: "The North Face Montana Ski Gloves, men's",
+    price: 65, approx: true, shop: ["REI", "https://www.rei.com/product/239479/the-north-face-montana-ski-gloves-mens"], tags: ["Ask Kimi for his size and color"] },
+  { id: "hat", cat: "Winter", emoji: "🧢", title: "Hat", name: "Carhartt A18 knit cuffed beanie",
+    price: 19.99, tracked: true, shop: ["Amazon", A + "B002G9UDYG"], tags: ["Ask Kimi for the color"] },
+  { id: "face-mask", cat: "Winter", emoji: "🥶", title: "Face mask for the wind", name: "Buff ThermoNet neck gaiter",
+    price: 30, tracked: true, shop: ["Amazon", A + "B0848XF4TC"], tags: ["Ask Kimi for the color"] },
+  { id: "base-layer", cat: "Winter", emoji: "👕", title: "Warm shirt", name: "REI Co-op Midweight Long-Sleeve Crew base layer, men's",
+    price: 45, approx: true, shop: ["REI", "https://www.rei.com/search?q=rei+co-op+midweight+long-sleeve+crew+base+layer+top+mens"], tags: ["Ask Kimi for his size and color"] },
+  { id: "pants", cat: "Winter", emoji: "👖", title: "Warm pants", name: "Carhartt Relaxed Straight flannel-lined jean, men's",
+    price: 54.99, tracked: true, shop: ["Amazon", A + "B0B4F1J941"], tags: ["Ask Kimi for his waist, length and color", "Tight in the hips"] },
+  { id: "socks", cat: "Winter", emoji: "🧦", title: "Socks", name: "Darn Tough Light Hiker Micro Crew, men's merino",
+    price: 25, approx: true, shop: ["Amazon", A + "B07N1T79DP"], tags: ["Ask Kimi for his size and color", "Price is per pair"] },
 
-  { cat: "Gaming", title: "Gaming mic + free noise cancelling",
-    pick: { name: "Fifine AmpliGame AM8 (USB dynamic mic)", price: "$44.99", shops: [["Buy at Amazon", A + "B0BMFQP2ZZ"]] },
-    why: "A cardioid dynamic mic you speak into from a few inches away. The noise cancelling comes from NVIDIA Broadcast, a free app for RTX graphics cards.",
-    note: "No independent test of this mic's own noise rejection was found. The pick rests on the free software.",
-    alts: [["Free, nothing to buy", "NVIDIA Broadcast noise removal (needs an RTX card).", "NVIDIA", "https://www.nvidia.com/en-us/geforce/broadcasting/broadcast-app/"],
-           ["Upgrade", "Shure MV6, ≈$145. PC Gamer's best gaming mic, with noise reduction built in.", "Best Buy", "https://www.bestbuy.com/product/shure-mv6-gaming-streaming-usb-microphone-plug-play-no-drivers-no-delays-real-time-denoiser-for-professional-sound-black/J78FTSR8Y2"]],
-    src: [["PC Gamer", "https://www.pcgamer.com/best-microphone-gaming-streaming/"]] },
+  { id: "towels", cat: "Kitchen", emoji: "🧻", title: "Fast-drying hand towels", name: "Aunt Martha's flour sack towels, 7 pack",
+    price: 24.99, tracked: true, shop: ["Amazon", A + "B0018N9A8G"], tags: [] },
+  { id: "sharpener", cat: "Kitchen", emoji: "🔪", title: "Rolling knife sharpener", name: "The Original Tumbler rolling sharpener",
+    price: 96.75, list: 129, listLabel: "typical", tracked: true, shop: ["Amazon", A + "B0CGGVHBQG"], tags: ["Ask Kimi for the color"] },
+  { id: "breading-trays", cat: "Kitchen", emoji: "🍤", title: "Breading trays", name: "Nordic Ware Naturals eighth sheet pans, three of them",
+    price: 7.49, list: 10, qty: 3, tracked: true, shop: ["Amazon", A + "B079Q1GT7H"], tags: ["Set the quantity to 3"] },
+  { id: "fryer", cat: "Kitchen", emoji: "🍟", title: "Deep fryer that filters its oil", name: "T-fal Ultimate EZ Clean fryer, 3.5 L",
+    price: 104.44, list: 149.99, tracked: true, shop: ["Amazon", A + "B00NQ7QFGM"], tags: [] },
+  { id: "rice-cooker", cat: "Kitchen", emoji: "🍚", title: "Rice cooker", name: "Aroma Select Stainless rice cooker, 3-cup",
+    price: 37.99, list: 43.99, listLabel: "typical", tracked: true, shop: ["Amazon", A + "B007TNXYYA"], tags: [] },
 
-  { cat: "Chicago winter", title: "Boots that grip on ice",
-    pick: { name: "Kamik Nation Plus snow boots (men's sizes)", price: "$80–100 by size", shops: [["Buy at Amazon", A + "B00AZODA80"]] },
-    size: true,
-    why: "Wirecutter's budget snow boot: waterproof, warm enough for commuting, and better grip than most. Add the cleats below for real ice.",
-    note: "No boot is slip-proof on smooth ice. Cleats are what make the difference; take them off indoors.",
-    alts: [["Add for ice", "Yaktrax ICEtrekkers Diamond Grip cleats, $41.77. Wirecutter's pick for city walking; sized to the boot.", "Amazon", A + "B01BZHF97U"],
-           ["Upgrade", "Baffin Cloud Low, ≈$149. Wirecutter's top boot: warmer, softer tread that grips ice.", "Baffin (men's)", "https://www.baffin.com/en-us/products/easem008"],
-           ["Women's", "Baffin Cloud Low in women's sizes.", "REI", "https://www.rei.com/product/254622/baffin-cloud-low-winter-boots-womens"]],
-    src: [["Wirecutter boots", "https://www.nytimes.com/wirecutter/reviews/best-winter-boots-for-men-and-women/"], ["Wirecutter cleats", "https://www.nytimes.com/wirecutter/reviews/best-ice-cleats/"]] },
-
-  { cat: "Chicago winter", title: "Outer layer (winter coat)",
-    pick: { name: "Columbia Landroamer II parka (men's)", price: "≈$180 (list $240)", shops: [["Buy at REI", "https://www.rei.com/product/236425/columbia-landroamer-ii-insulated-parka-mens"]] },
-    size: true,
-    why: "GearLab's favorite low-cost everyday parka: thigh length, blocks wind and snow, and as warm in its tests as coats twice the price.",
-    note: "GearLab reports 25% off at REI, which makes about $180. It runs large.",
-    alts: [["Women's", "Orolay Thickened Down Jacket, $110–160 by color. One of the warmest GearLab tested, but not waterproof.", "Amazon", A + "B00HHOXRZC"]],
-    src: [["GearLab men's", "https://www.outdoorgearlab.com/topics/clothing-mens/best-winter-jacket-men"], ["GearLab Orolay", "https://www.outdoorgearlab.com/reviews/clothing-womens/winter-jacket-womens/orolay-thickened-down"]] },
-
-  { cat: "Chicago winter", title: "Gloves",
-    pick: { name: "The North Face Montana Ski Gloves", price: "$65–70", shops: [["Men's at REI", "https://www.rei.com/product/239479/the-north-face-montana-ski-gloves-mens"], ["Women's at Amazon", A + "B0F2CXJSG3"]] },
-    size: true,
-    why: "Wirecutter's budget ski glove: warm, water resistant, touchscreen fingertips. Ski gloves are what keep hands warm in wind.",
-    alts: [["For texting", "Moshi Digits touchscreen gloves, $35.95. The warmest touchscreen knit gloves Wirecutter tested; fine for short walks.", "Amazon", A + "B081F74LRM"]],
-    src: [["Wirecutter ski gloves", "https://www.nytimes.com/wirecutter/reviews/best-ski-and-snowboard-gloves/"], ["Wirecutter touchscreen", "https://www.nytimes.com/wirecutter/reviews/best-touchscreen-gloves/"]] },
-
-  { cat: "Chicago winter", title: "Hat",
-    pick: { name: "Carhartt A18 knit cuffed beanie", price: "$19.99", shops: [["Buy at Amazon", A + "B002G9UDYG"]] },
-    why: "CNN Underscored's best winter hat out of 15: one of the warmest it tested and one of the cheapest.",
-    alts: [],
-    src: [["CNN Underscored", "https://www.cnn.com/cnn-underscored/reviews/best-winter-hat"]] },
-
-  { cat: "Chicago winter", title: "Face mask for the wind",
-    pick: { name: "Buff ThermoNet neck gaiter", price: "≈$30", shops: [["Buy at Amazon", A + "B0848XF4TC"]] },
-    why: "Pulls up over the nose and ears under a hat. Wirecutter's guide to bike commuting in foul weather recommends it over a scarf.",
-    note: "No tested roundup of winter face masks was found, so this is the least certain pick on the list.",
-    alts: [],
-    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-rain-gear-for-biking/"]] },
-
-  { cat: "Chicago winter", title: "Warm shirt (base layer)",
-    pick: { name: "REI Co-op Midweight Long-Sleeve Crew base layer", price: "≈$45–49", shops: [["Men's at REI", "https://www.rei.com/search?q=rei+co-op+midweight+long-sleeve+crew+base+layer+top+mens"], ["Women's at REI", "https://www.rei.com/product/C08591/rei-co-op-midweight-long-sleeve-crew-base-layer-top-womens"]] },
-    size: true,
-    why: "Wirecutter's budget thermal top. Worn under a sweater, it does more for warmth than a cotton T-shirt, which stays damp and cold.",
-    alts: [["Upgrade", "Ridge Merino Aspect midweight wool top, ≈$60–80. Wirecutter's top pick.", "Ridge Merino", "https://www.ridgemerino.com/"]],
-    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-mens-base-layers-and-thermal-underwear/"]] },
-
-  { cat: "Chicago winter", title: "Warm pants",
-    pick: { name: "Carhartt Relaxed Straight Lined Jean (men's)", price: "$54.99", shops: [["Buy at Amazon", A + "B0B4F1J941"]] },
-    size: true,
-    why: "Flannel-lined jeans at less than half the price of CNN Underscored's winners. A clear step up from plain jeans; they run tight in the hips.",
-    alts: [["Warmest", "Patagonia Iron Forge fleece-lined work pants, ≈$125. The warmest men's pair CNN tested.", "Patagonia", "https://www.patagonia.com/product/mens-iron-forge-fleece-lined-5-pocket-work-pants-regular/196924591356.html"],
-           ["Women's", "Duluth Heritage Hi-Rise Lined Straight Leg Jeans, ≈$110.", "Duluth", "https://www.duluthtrading.com/womens-duluth-heritage-hi-rise-lined-straight-leg-jeans-55306.html"]],
-    src: [["CNN Underscored", "https://www.cnn.com/cnn-underscored/reviews/best-winter-pants"]] },
-
-  { cat: "Chicago winter", title: "Socks",
-    pick: { name: "Darn Tough Light Hiker Micro Crew (merino)", price: "≈$25 a pair", shops: [["Men's at Amazon", A + "B07N1T79DP"], ["Women's at Amazon", A + "B0DC4PNBZK"]] },
-    size: true,
-    why: "Wirecutter's top sock. Merino wool stays warm when damp and does not smell, and Darn Tough replaces worn-out pairs for life.",
-    alts: [],
-    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-hiking-socks/"]] },
-
-  { cat: "Kitchen", title: "Hand towel that dries fast",
-    pick: { name: "Aunt Martha's flour sack towels (7 pack)", price: "$24.99", shops: [["Buy at Amazon", A + "B0018N9A8G"]] },
-    why: "Thin cotton dries faster than terry cloth, so it stays fresh longer between washes. Seven towels means a dry one is always hanging.",
-    note: "No towel skips the laundry. A fast-drying one just smells clean for longer.",
-    alts: [["Thicker", "Williams Sonoma All Purpose Pantry Towels, ≈$25 for 4. Wirecutter's top kitchen towel: more absorbent, slower to dry.", "Williams Sonoma", "https://www.williams-sonoma.com/products/all-purpose-pantry-towels/"]],
-    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-kitchen-towels/"]] },
-
-  { cat: "Kitchen", title: "Rolling knife sharpener",
-    pick: { name: "The Original Tumbler rolling sharpener", price: "$96.75", shops: [["Buy at Amazon", A + "B0CGGVHBQG"]] },
-    why: "The cheapest of the three big names, with the strongest magnet and a lifetime warranty. Good results on kitchen knives in two separate tests.",
-    note: "The discs cannot be replaced when they wear out.",
-    alts: [["Alternative", "Work Sharp Rolling Knife Sharpener, $101.96. Outdoor Life ranked it best, Prudent Reviews measured it worst: testers disagree.", "Amazon", A + "B0CHLKHK9L"]],
-    src: [["Prudent Reviews", "https://prudentreviews.com/horl-2-vs-tumbler-vs-work-sharp/"], ["Outdoor Life", "https://www.outdoorlife.com/gear/best-rolling-knife-sharpeners/"]] },
-
-  { cat: "Kitchen", title: "Breading trays",
-    pick: { name: "Nordic Ware Naturals eighth sheet pans (get 3)", price: "$22.47 for 3", shops: [["Buy at Amazon", A + "B079Q1GT7H"]] },
-    note: "$7.49 each; set the quantity to 3.",
-    why: "Three small rimmed pans make a flour, egg and crumb line, then go on being useful for baking and prep. Sturdier than a single-use gadget.",
-    alts: [["Dedicated set", "Hulisen interlocking breading trays, set of 3, $17.39. No independent test found.", "Amazon", A + "B08L4HS2XH"]],
-    src: [["Wirecutter (the pans)", "https://www.nytimes.com/wirecutter/reviews/best-cookie-sheet/"]] },
-
-  { cat: "Kitchen", title: "Deep fryer that filters its oil",
-    pick: { name: "T-fal Ultimate EZ Clean fryer, 3.5 L", price: "$104.44", shops: [["Buy at Amazon", A + "B00NQ7QFGM"]] },
-    why: "America's Test Kitchen's winner. When the oil cools it drains through a filter into a sealed box under the fryer, leaving the crumbs behind.",
-    note: "It cleans and stores used oil. Fresh oil stays in its own bottle; no home fryer was found that holds both.",
-    alts: [],
-    src: [["America's Test Kitchen", "https://www.americastestkitchen.com/equipment_reviews/2118-electric-deep-fryers"]] },
-
-  { cat: "Kitchen", title: "Rice cooker",
-    pick: { name: "Aroma Select Stainless rice cooker, 3-cup", price: "$37.99", shops: [["Buy at Amazon", A + "B007TNXYYA"]] },
-    why: "Wirecutter's pick for small batches: 3 cups of dry rice makes 6 cooked. One switch, stainless pot that goes in the dishwasher.",
-    alts: [["Bigger", "Aroma Select Stainless ARC-757SG, 7 cups dry / 14 cooked, $55. Wirecutter's budget pick.", "Amazon", A + "B007WQ9Z56"],
-           ["Upgrade", "Zojirushi NL-EAC10, $149.62. Wirecutter's top pick: the best jasmine rice it tested, but slow.", "Amazon", A + "B0FKQNJKLX"]],
-    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/the-best-rice-cooker/"]] },
-
-  { cat: "Pets", title: "Cat tree",
-    pick: { name: "Feandrea 33.1-inch cat tower", price: "$44.73", shops: [["Buy at Amazon", A + "B0795T91YP"]] },
-    why: "Wirecutter's budget pick: wide top perch, big cave doors, washable cushion and a wall strap. For cats up to about 15 lb.",
-    alts: [["Buy once", "New Cat Condos Large Cat Tree, $163.99. Wirecutter's top pick: solid wood posts, over 5 feet tall, built for big cats.", "New Cat Condos", "https://www.newcatcondos.com/large-cat-tree-for-multiple-cats-solid-wood-cat-tower-for-large-cats"]],
-    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/reviews/best-cat-trees/"]] },
-
-  { cat: "Pets", title: "Cat harness and leash",
-    pick: { name: "Voyager Step-In adjustable cat harness with 5 ft leash", price: "$15.99", shops: [["Buy at Amazon", A + "B0844ZDSWT"]] },
-    why: "Cats.com's best overall of 10 harnesses it bought and tried on two cats outdoors: leash included, and it buckles at the neck so nothing goes over the cat's head.",
-    note: "Ask Kimi for the cat's neck and chest measurements before ordering, then pick the size and color on the page. It runs small, so size up when in between, as long as it still tightens snugly. No harness is truly escape-proof: test the fit indoors and use it only with someone holding the leash.",
-    alts: [["More adjustable", "PetSafe Come With Me Kitty harness and bungee leash, $16.99. Cats.com's runner-up: the shoulder strap pinches closed when the cat pulls, which the tester's cats disliked.", "Amazon", A + "B001OP5B6S"],
-           ["Easiest on and off", "OutdoorBengal Houdini harness and 6 ft leash, $39.99. The quickest to put on in the same test.", "Amazon", A + "B0BM6H8ZSS"],
-           ["Most secure", "Kitty Holster vest harness, $29.95, no leash included. Business Insider's top pick: wide cotton bands and velcro, no escapes in six years of the tester's use. Some cats walk stiffly in a vest.", "Amazon", A + "B013TMAD8Y"]],
-    src: [["Cats.com", "https://cats.com/best-cat-harness"], ["Business Insider", "https://www.businessinsider.com/guides/pets/best-cat-harness"]] },
-
-  { cat: "Pets", title: "Toys for both small dogs and cats",
-    pick: { name: "Nina Ottosson Dog Brick treat puzzle", price: "$11.02", shops: [["Buy at Amazon", A + "B0711Y9XTF"]] },
-    why: "Pets slide and flip covers to find treats. Sold for dogs, and Wirecutter's cat-gift guide uses it with cats too.",
-    note: "Use it with one pet at a time, with treats made for that animal, and put it away afterwards.",
-    alts: [["Also good", "LickiMat Classic slow feeder, $9.99. A lick mat made in cat and small-dog versions.", "LickiMat", "https://lickimat.us/products/cat-classic-feeder"]],
-    src: [["Wirecutter", "https://www.nytimes.com/wirecutter/gifts/best-gifts-for-cats/"]] },
+  { id: "cat-tree", cat: "Pets", emoji: "🐈", title: "Cat tree", name: "Feandrea 33.1-inch cat tower",
+    price: 44.73, list: 49.99, tracked: true, shop: ["Amazon", A + "B0795T91YP"], tags: ["Ask Kimi for the color"] },
+  { id: "cat-harness", cat: "Pets", emoji: "🐾", title: "Cat harness and leash", name: "Voyager Step-In cat harness with 5 ft leash",
+    price: 15.99, tracked: true, shop: ["Amazon", A + "B0844ZDSWT"], tags: ["Ask Kimi for the cat's chest size and the color", "Runs small"] },
+  { id: "pet-puzzle", cat: "Pets", emoji: "🧩", title: "Treat puzzle for the dog and the cat", name: "Nina Ottosson Dog Brick treat puzzle",
+    price: 11.02, list: 20.99, tracked: true, shop: ["Amazon", A + "B0711Y9XTF"], tags: [] },
 ];
+const BASE_DATE = Date.parse("2026-11-26T02:55:00Z");   // when the prices above were read from the shops
+const PRICES_URL = "https://raw.githubusercontent.com/Kimikari/kimis-christmas-list/data/prices.json";
+// The shared "already bought" list: one small public text record, {"<id>": <time it was marked>}.
+const STORE_READ = "https://textdb.online/kimis-xmas-bought-q7w3k9x2";
+const STORE_WRITE = "https://textdb.online/update";
+const STORE_KEY = "kimis-xmas-bought-q7w3k9x2";
 
+const $ = id => document.getElementById(id);
 const el = (tag, cls, text) => {
   const n = document.createElement(tag);
   if (cls) n.className = cls;
   if (text != null) n.textContent = text;
   return n;
 };
-const link = (label, url, cls) => {
-  const a = el("a", cls, label);
-  a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
-  return a;
+const usd = n => "$" + (Number.isInteger(n) ? String(n) : n.toFixed(2));
+const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } };
+const calm = matchMedia("(prefers-reduced-motion: reduce)");
+const say = text => { $("live").textContent = ""; setTimeout(() => { $("live").textContent = text; }, 50); };
+const ago = t => {
+  const m = Math.max(0, Math.round((Date.now() - t) / 60000));
+  if (m < 1) return "just now";
+  if (m < 60) return m + " min ago";
+  if (m < 60 * 36) return Math.round(m / 60) + " h ago";
+  return Math.round(m / 1440) + " days ago";
 };
 
-function card(it) {
+/* ---------- State ---------- */
+const byId = new Map(ITEMS.map(it => [it.id, it]));
+const view = new Map();        // id -> the card's parts
+let bought = {};               // id -> +time it was marked bought, or -time it was un-marked, as last read from the shared list
+let storeOk = null;            // null: not read yet, true/false: the last read worked or not
+let readNo = 0;                // counts reads and saves, so that an older read cannot undo a newer save on screen
+let kimi = lsGet("xmas-kimi") === "1";
+let filterCat = "All", sortBy = "list";
+const priceAt = new Map();     // id -> time its price was read
+for (const it of ITEMS) priceAt.set(it.id, BASE_DATE);
+// What this device marked itself (id -> +time or -time), to put a mark back when the shared list lost it.
+let mine = {};
+try { mine = JSON.parse(lsGet("xmas-mine")) || {}; } catch { mine = {}; }
+if (typeof mine !== "object" || Array.isArray(mine)) mine = {};
+const putBack = new Map();     // id -> how often this page put a lost mark back
+
+const round2 = n => Math.round(n * 100) / 100;
+const total = it => round2(it.price * (it.qty || 1));
+const totalList = it => (it.list && it.list > it.price ? round2(it.list * (it.qty || 1)) : null);
+const pctOff = it => { const l = totalList(it); return l ? Math.round((1 - total(it) / l) * 100) : 0; };
+const isBought = id => !kimi && bought[id] > 0;
+
+/* ---------- Cards ---------- */
+function makeCard(it, i) {
   const c = el("article", "card");
-  c.dataset.cat = it.cat;
-  c.append(el("div", "cat", it.cat), el("h2", null, it.title));
-  const p = el("div", "pick");
-  p.append(el("span", "name", it.pick.name), el("span", "price", it.pick.price));
-  c.append(p, el("p", "why", it.why));
-  if (it.note) c.append(el("div", "note", it.note));
-  if (it.size) c.append(el("p", "size", "Ask Kimi for size and fit before ordering."));
-  const shops = el("div");
-  for (const [label, url] of it.pick.shops) shops.append(link(label, url, "buy"));
-  c.append(shops);
-  if (it.alts.length) {
-    const ul = el("ul", "alts");
-    for (const [tag, text, label, url] of it.alts) {
-      const li = el("li");
-      li.append(el("span", "tag", tag + ": "), document.createTextNode(text + " "), link(label, url));
-      ul.append(li);
-    }
-    c.append(ul);
-  }
-  const s = el("div", "src", "Why this one: ");
-  it.src.forEach(([label, url], i) => { if (i) s.append(", "); s.append(link(label, url)); });
-  c.append(s);
+  c.style.animationDelay = Math.min(i * 40, 600) + "ms";
+  c.addEventListener("animationend", e => { if (e.animationName === "pop") { c.classList.add("in"); c.style.animationDelay = ""; } });
+  const off = el("div", "off");
+  const top = el("div", "top");
+  const head = el("div");
+  head.append(el("div", "cat", it.cat), el("h2", null, it.title));
+  top.append(el("div", "emoji", it.emoji), head);
+  top.firstChild.setAttribute("aria-hidden", "true");
+  const wrapped = el("p", "wrapped", "🎁 Already bought");
+  const prices = el("div", "prices");
+  const now = el("span", "now"), was = el("span", "was"), save = el("span", "save"), prime = el("span", "save prime", "needs Prime");
+  prices.append(now, was, save, prime);
+  const fresh = el("p", "fresh");
+  const tags = el("ul", "tags");
+  for (const t of it.tags) tags.append(el("li", null, t));
+  const acts = el("div", "acts");
+  const buy = el("a", "buy", "Buy at " + it.shop[0] + " ↗");
+  buy.href = it.shop[1]; buy.target = "_blank"; buy.rel = "noopener noreferrer";
+  const got = el("button", "got"); got.type = "button";
+  const msg = el("p", "msg"); msg.setAttribute("role", "alert");
+  acts.append(buy, got, msg);
+  c.append(off, top, wrapped, el("p", "name", it.name), prices, fresh);
+  if (it.tags.length) c.append(tags);
+  c.append(acts);
+  const v = { card: c, off, now, was, save, prime, fresh, got, msg, armed: 0, want: false, busy: false };
+  got.addEventListener("click", () => onGot(it, v));
+  view.set(it.id, v);
+  paintPrice(it); paintBought(it);
   return c;
 }
 
-const grid = document.getElementById("grid");
-ITEMS.forEach(it => grid.append(card(it)));
+function paintPrice(it) {
+  const v = view.get(it.id), l = totalList(it), p = pctOff(it), ap = it.approx ? "≈" : "";
+  v.now.textContent = ap + usd(total(it));
+  v.off.hidden = !(p >= 5);
+  v.off.textContent = "-" + p + "%";
+  v.was.hidden = v.save.hidden = !l;
+  if (l) {
+    v.was.textContent = "";
+    v.was.append(el("s", null, usd(l)), " " + (it.listLabel === "typical" ? "typical price" : "list price"));
+    v.save.textContent = "save " + ap + usd(round2(l - total(it)));
+  }
+  v.prime.hidden = !it.prime;
+  v.fresh.textContent = "";
+  if (it.tracked) {
+    const t = priceAt.get(it.id), old = Date.now() - t > 26 * 3600e3;
+    v.fresh.className = "fresh" + (old ? " old" : "");
+    v.fresh.append(el("span", "dot"), "Price read from the shop " + ago(t) + (old ? ": look before you buy" : ""));
+  } else {
+    v.fresh.className = "fresh fixed";
+    v.fresh.append(el("span", "dot"), "Not tracked: see the shop for today's price");
+  }
+}
 
-const cats = ["All", ...new Set(ITEMS.map(it => it.cat))];
-const nav = document.getElementById("filters");
-function show(cat) {
-  for (const b of nav.children) b.setAttribute("aria-pressed", String(b.textContent === cat));
-  for (const c of grid.children) c.hidden = cat !== "All" && c.dataset.cat !== cat;
+function paintBought(it) {
+  const v = view.get(it.id), b = isBought(it.id);
+  v.card.classList.toggle("bought", b);
+  v.got.hidden = kimi;
+  v.got.classList.toggle("ask", v.armed > 0 && !v.busy);
+  v.got.disabled = v.busy;
+  if (v.busy) v.got.textContent = "Saving…";
+  else if (v.armed) v.got.textContent = v.want ? "Tap again: yes, I bought it" : "Tap again: it is NOT bought";
+  else v.got.textContent = b ? "Marked by mistake? Undo" : "🎁 I bought this";
 }
-function pick(cat) {
-  show(cat);
-  // The page gets shorter when cards are hidden: bring the list back into view.
-  if (window.scrollY > nav.offsetTop) window.scrollTo(0, nav.offsetTop);
+
+/* ---------- Bought: the shared list ---------- */
+const pause = ms => new Promise(r => setTimeout(r, ms));
+const timed = (url, opt = {}) => {
+  const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 12000);
+  return fetch(url, { ...opt, signal: ctl.signal }).finally(() => clearTimeout(t));
+};
+// Keeps everything that can be a mark: a short name with a number. Gifts this page does not know are kept too
+// (a newer version of the page may know them), so that saving from an old open tab does not delete them.
+function tidy(raw) {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("not a list");
+  const out = {};
+  for (const [k, t] of Object.entries(raw).slice(0, 80))
+    if (k.length <= 40 && typeof t === "number" && Number.isFinite(t) && t !== 0) out[k] = t;
+  return out;
 }
-for (const cat of cats) {
-  const b = el("button", null, cat);
+// Throws when the list cannot be read or is not what it should be: a bad read never counts as "nothing is bought".
+async function readStore() {
+  const r = await timed(STORE_READ + "?t=" + Date.now(), { cache: "no-store" });
+  if (!r.ok) throw new Error("read " + r.status);
+  const text = (await r.text()).trim();
+  if (!text) { const e = new Error("empty"); e.empty = true; throw e; }
+  return tidy(JSON.parse(text));
+}
+async function writeStore(data) {
+  const body = new URLSearchParams({ key: STORE_KEY, value: JSON.stringify(data) });
+  const r = await timed(STORE_WRITE, { method: "POST", body });
+  if (!r.ok) throw new Error("write " + r.status);
+  const j = await r.json();
+  if (!j || j.status !== 1) throw new Error("write refused");
+}
+// Change one gift: read the newest list, change that gift only, write, then read back to see that it stuck.
+async function saveMark(id, value) {
+  let empties = 0;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    let data;
+    try { data = await readStore(); }
+    catch (e) {
+      if (!e.empty) throw e;
+      if (++empties < 2) { await pause(700); continue; }
+      data = {};                       // the record is really empty: start a new one
+    }
+    data[id] = value;
+    await writeStore(data);
+    await pause(600 + attempt * 600);
+    const back = await readStore();
+    if ((back[id] > 0) === (value > 0)) return back;
+  }
+  throw new Error("did not stick");
+}
+// One save at a time on this device.
+let chain = Promise.resolve();
+const queued = job => { const p = chain.then(job); chain = p.catch(() => {}); return p; };
+const took = back => { readNo++; bought = back; storeOk = true; };
+function setMark(id, on) {
+  const value = on ? Date.now() : -Date.now();
+  return queued(async () => {
+    const back = await saveMark(id, value);
+    mine[id] = value; lsSet("xmas-mine", JSON.stringify(mine));
+    took(back);
+  });
+}
+
+async function onGot(it, v) {
+  if (v.busy || kimi) return;
+  v.msg.textContent = "";
+  if (!v.armed) {                       // first tap: ask, and remember what was asked
+    v.want = !isBought(it.id);
+    v.armed = setTimeout(() => { v.armed = 0; paintBought(it); }, 8000);
+    paintBought(it);
+    return;
+  }
+  clearTimeout(v.armed); v.armed = 0;
+  if (isBought(it.id) === v.want) { paintBought(it); return; }   // someone else did it meanwhile
+  const on = v.want;
+  v.busy = true; paintBought(it);
+  try {
+    await setMark(it.id, on);
+    v.busy = false;
+    paintAll();
+    if (on) { celebrate(v.card); say(it.title + " is marked as bought for everyone."); }
+    else say(it.title + " is no longer marked as bought.");
+    setTimeout(refreshBought, 4000);
+  } catch {
+    v.busy = false; paintBought(it);
+    v.msg.textContent = "Not saved. Check your connection and try again, or tell the family yourself.";
+  }
+}
+
+async function refreshBought() {
+  if (document.hidden) return;
+  const no = ++readNo;
+  let data;
+  try { data = await readStore(); }
+  catch (e) {
+    if (e && e.empty) data = {};        // nobody has marked anything yet
+    else { if (no === readNo) { storeOk = false; paintAll(); } return; }
+  }
+  if (no !== readNo) return;            // a save or a newer read finished meanwhile
+  bought = data; storeOk = true;
+  paintAll();
+  // Put back a mark of this device that the shared list lost (two people saving at the same moment).
+  for (const [id, mark] of Object.entries(mine)) {
+    if (!byId.has(id) || typeof mark !== "number") continue;
+    const there = data[id] || 0;
+    if (Math.abs(there) >= Math.abs(mark) || (there > 0) === (mark > 0)) continue;
+    const n = putBack.get(id) || 0;
+    if (n >= 3) continue;
+    putBack.set(id, n + 1);
+    queued(() => saveMark(id, mark)).then(back => { took(back); paintAll(); }, () => {});
+  }
+}
+
+/* ---------- Prices ---------- */
+let checkedAt = null, readCount = "";
+const okPrice = n => typeof n === "number" && Number.isFinite(n) && n > 0 && n < 5000;
+async function refreshPrices() {
+  if (document.hidden) return;
+  try {
+    const r = await timed(PRICES_URL + "?t=" + Math.floor(Date.now() / 240000), { cache: "no-cache" });
+    if (!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    const soon = Date.now() + 600000;   // a time in the future is not believed
+    for (const [id, p] of Object.entries((data && data.items) || {})) {
+      const it = byId.get(id);
+      if (!it || !it.tracked || !p || typeof p !== "object") continue;
+      const at = Date.parse(p.at);
+      if (!okPrice(p.price) || !(at <= soon) || at < priceAt.get(id)) continue;
+      it.price = p.price;
+      it.list = okPrice(p.list) && p.list > p.price ? p.list : null;
+      it.listLabel = p.listLabel === "typical" ? "typical" : "list";
+      it.prime = p.prime === true;
+      priceAt.set(id, at);
+    }
+    const c = Date.parse(data && data.checkedAt);
+    if (c <= soon && c >= BASE_DATE) {
+      checkedAt = c;
+      readCount = Number.isInteger(data.ok) && Number.isInteger(data.failed) ? ` It read ${data.ok} of ${data.ok + data.failed} prices.` : "";
+    }
+  } catch { /* keep the prices we have */ }
+  paintAll();
+}
+
+/* ---------- Painting the page ---------- */
+function shown(it) {
+  if (filterCat !== "All" && it.cat !== filterCat) return false;
+  const max = Number($("budget").value);
+  return max >= Number($("budget").max) || total(it) <= max;
+}
+// Puts the cards in order, bought ones last. Only called on load and when the visitor changes the order,
+// never by a background refresh: a card must not move under a finger.
+function reorder() {
+  const order = ITEMS.map((it, i) => ({ it, i })).sort((a, b) => {
+    const d = isBought(a.it.id) - isBought(b.it.id);
+    if (d) return d;
+    if (sortBy === "off") return pctOff(b.it) - pctOff(a.it) || a.i - b.i;
+    if (sortBy === "low") return total(a.it) - total(b.it) || a.i - b.i;
+    if (sortBy === "high") return total(b.it) - total(a.it) || a.i - b.i;
+    return a.i - b.i;
+  });
+  const grid = $("grid");
+  order.forEach(({ it }, n) => {
+    const c = view.get(it.id).card;
+    if (grid.children[n] !== c) grid.insertBefore(c, grid.children[n] || null);
+  });
+}
+let sortedOnce = false;
+function paintAll() {
+  for (const it of ITEMS) { paintPrice(it); paintBought(it); }
+  if (!sortedOnce && storeOk === true) { sortedOnce = true; reorder(); }
+  let any = false;
+  for (const it of ITEMS) {
+    const c = view.get(it.id).card;
+    c.hidden = !shown(it);
+    any = any || !c.hidden;
+  }
+  $("empty").hidden = any;
+
+  const n = ITEMS.filter(it => isBought(it.id)).length;
+  $("track").hidden = kimi || storeOk !== true;
+  const pct = (n / ITEMS.length) * 100;
+  $("fill").style.width = pct + "%";
+  $("sleigh").style.left = pct + "%";
+  $("trackText").textContent = n === ITEMS.length ? "Every gift is wrapped. Merry Christmas! 🎉"
+    : n ? `${n} of ${ITEMS.length} gifts wrapped` : `0 of ${ITEMS.length} gifts wrapped. Be the first!`;
+
+  const banner = $("banner");
+  banner.hidden = false;
+  if (kimi) $("bannerText").textContent = "Kimi mode: what's already bought is hidden on this device. No peeking! 🙈";
+  else if (storeOk === null) $("bannerText").textContent = "Checking what's already bought…";
+  else if (storeOk === false) $("bannerText").textContent = "Can't reach the shared list right now, so this page can't show what is already bought. Ask before you buy.";
+  else banner.hidden = true;
+  $("kimiBtn").setAttribute("aria-pressed", String(kimi));
+  $("sub").hidden = kimi;
+
+  const when = t => new Date(t).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  $("priceNote").textContent = checkedAt
+    ? `The price tracker last ran ${ago(checkedAt)} (${when(checkedAt)}).${readCount}`
+    : `Prices were read from the shops on ${when(BASE_DATE)}.`;
+}
+
+/* ---------- Controls ---------- */
+const CATS = ["All", ...new Set(ITEMS.map(it => it.cat))];
+const CAT_ICON = { All: "🎁", Sleep: "😴", Gaming: "🎮", Winter: "❄️", Kitchen: "🍳", Pets: "🐾" };
+for (const cat of CATS) {
+  const b = el("button", null, (CAT_ICON[cat] || "") + " " + cat);
   b.type = "button";
-  b.addEventListener("click", () => pick(cat));
-  nav.append(b);
+  b.setAttribute("aria-pressed", String(cat === "All"));
+  b.addEventListener("click", () => {
+    filterCat = cat;
+    for (const x of $("chips").children) x.setAttribute("aria-pressed", String(x === b));
+    reorder(); paintAll();
+  });
+  $("chips").append(b);
 }
-show("All");
+function paintBudget() {
+  const b = $("budget");
+  $("budgetOut").textContent = Number(b.value) >= Number(b.max) ? "any" : "≤ $" + b.value;
+}
+$("budget").addEventListener("input", () => { paintBudget(); paintAll(); });
+$("sort").addEventListener("change", e => { sortBy = e.target.value; reorder(); paintAll(); });
+$("santa").addEventListener("click", () => {
+  const pool = ITEMS.filter(it => shown(it) && !isBought(it.id));
+  if (!pool.length) { say("Nothing left to pick with these filters."); return; }
+  const it = pool[Math.floor(Math.random() * pool.length)], c = view.get(it.id).card;
+  c.scrollIntoView({ block: "center", behavior: calm.matches ? "auto" : "smooth" });
+  c.classList.remove("spot"); void c.offsetWidth; c.classList.add("spot", "picked");
+  setTimeout(() => c.classList.remove("picked"), 3000);
+  say("Santa picked: " + it.title + ", " + usd(total(it)));
+});
+$("kimiBtn").addEventListener("click", () => { kimi = !kimi; lsSet("xmas-kimi", kimi ? "1" : "0"); reorder(); paintAll(); });
+
+/* ---------- Fun ---------- */
+function burst(x, y, icons, n) {
+  if (calm.matches) return;
+  for (let i = 0; i < n; i++) {
+    const b = el("span", "bit", icons[i % icons.length]);
+    const a = Math.random() * Math.PI * 2, d = 70 + Math.random() * 130;
+    b.style.left = x + "px"; b.style.top = y + "px";
+    b.style.setProperty("--dx", Math.cos(a) * d + "px");
+    b.style.setProperty("--dy", Math.sin(a) * d + 90 + "px");
+    b.style.setProperty("--r", (Math.random() * 720 - 360) + "deg");
+    b.setAttribute("aria-hidden", "true");
+    document.body.append(b);
+    setTimeout(() => b.remove(), 1500);
+  }
+}
+function celebrate(card) {
+  card.classList.remove("wrapnow"); void card.offsetWidth; card.classList.add("wrapnow");
+  const r = card.getBoundingClientRect();
+  burst(r.left + r.width / 2, Math.max(60, Math.min(innerHeight - 60, r.top + r.height / 3)), ["🎁", "⭐", "❄️", "🎀", "✨", "🔔"], 22);
+}
+$("tree").addEventListener("click", e => {
+  const r = e.currentTarget.getBoundingClientRect();
+  burst(r.left + r.width / 2, r.top + r.height / 2, ["⭐", "🔴", "🟡", "🔵", "✨"], 14);
+  gust = 60;
+});
+
+// Lights
+const LIGHTS = ["#ff4d4d", "#ffd23f", "#4dd6ff", "#5dff8f", "#ff8ad8"];
+const MODES = ["color", "warm", "off"];
+const lights = $("lights");
+for (let i = 0; i < 22; i++) { const b = el("i"); b.style.setProperty("--c", LIGHTS[i % LIGHTS.length]); lights.append(b); }
+lights.dataset.mode = MODES.includes(lsGet("xmas-lights")) ? lsGet("xmas-lights") : "color";
+lights.addEventListener("click", () => {
+  lights.dataset.mode = MODES[(MODES.indexOf(lights.dataset.mode) + 1) % MODES.length];
+  lsSet("xmas-lights", lights.dataset.mode);
+});
+
+// Countdown
+function paintCount() {
+  const now = new Date(), box = $("count");
+  let xmas = new Date(now.getFullYear(), 11, 25);
+  box.textContent = "";
+  if (now.getMonth() === 11 && now.getDate() === 25) { box.append(el("div", null, "🎅 Merry Christmas!")); return; }
+  if (now > xmas) xmas = new Date(now.getFullYear() + 1, 11, 25);
+  const mins = Math.floor((xmas - now) / 60000);
+  for (const [n, label] of [[Math.floor(mins / 1440), "days"], [Math.floor(mins / 60) % 24, "hours"], [mins % 60, "min"]]) {
+    const d = el("div"); d.append(el("b", null, String(n)), el("small", null, label)); box.append(d);
+  }
+  box.setAttribute("aria-label", `${Math.floor(mins / 1440)} days and ${Math.floor(mins / 60) % 24} hours until Christmas`);
+}
+
+// Snow: a small canvas that stops when the page is hidden, when snow is off, or for reduced motion
+const cv = $("snow"), cx = cv.getContext("2d");
+let flakes = [], snowOn = lsGet("xmas-snow") !== "0", raf = 0, gust = 0, W = 0, H = 0;
+function sizeSnow() {
+  const d = Math.min(devicePixelRatio || 1, 2);
+  // A phone's address bar changes the height on every scroll: only start over when the width changes.
+  if (innerWidth === W && innerHeight <= H) return;
+  W = innerWidth; H = innerHeight;
+  cv.width = W * d; cv.height = H * d; cx.setTransform(d, 0, 0, d, 0, 0);
+  const n = Math.min(70, Math.round(W * H / 14000));
+  flakes = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, r: 1 + Math.random() * 2.4, v: .3 + Math.random() * .9, p: Math.random() * 6.3 }));
+}
+function drawSnow() {
+  raf = 0;
+  cx.clearRect(0, 0, W, H);
+  cx.fillStyle = "#ffffffcc";
+  const g = gust > 0 ? gust-- / 12 : 0;
+  for (const f of flakes) {
+    f.p += .012; f.y += f.v + g * .4; f.x += Math.sin(f.p) * .4 + g;
+    if (f.y > H + 4) { f.y = -4; f.x = Math.random() * W; }
+    if (f.x > W + 4) f.x = -4;
+    cx.beginPath(); cx.arc(f.x, f.y, f.r, 0, 6.3); cx.fill();
+  }
+  runSnow();
+}
+function runSnow() {
+  const go = snowOn && !document.hidden && !calm.matches;
+  $("snowBtn").setAttribute("aria-pressed", String(snowOn && !calm.matches));
+  $("snowBtn").disabled = calm.matches;
+  $("snowBtn").textContent = calm.matches ? "❄️ Snow (off: your device asks for less motion)" : "❄️ Snow";
+  if (go && !raf) raf = requestAnimationFrame(drawSnow);
+  if (!go) { if (raf) cancelAnimationFrame(raf); raf = 0; cx.clearRect(0, 0, W, H); }
+}
+$("snowBtn").addEventListener("click", () => { snowOn = !snowOn; lsSet("xmas-snow", snowOn ? "1" : "0"); runSnow(); });
+addEventListener("resize", sizeSnow);
+calm.addEventListener("change", runSnow);
+
+/* ---------- Start ---------- */
+ITEMS.forEach((it, i) => $("grid").append(makeCard(it, i)));
+paintBudget(); paintCount(); sizeSnow(); runSnow(); paintAll();
+refreshBought(); refreshPrices();
+setInterval(refreshBought, 45000);
+setInterval(refreshPrices, 5 * 60000);
+setInterval(() => { if (!document.hidden) { paintCount(); for (const it of ITEMS) paintPrice(it); } }, 60000);
+document.addEventListener("visibilitychange", () => { runSnow(); if (!document.hidden) { refreshBought(); refreshPrices(); paintCount(); } });
 </script>
 </body>
 </html>

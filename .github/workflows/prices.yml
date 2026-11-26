@@ -1,0 +1,51 @@
+name: Track prices
+# Reads the shops' current prices and commits them as prices.json on the "data" branch,
+# which the page loads. The main branch (the site itself) is not touched.
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["tools/prices.mjs", ".github/workflows/prices.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prices
+  cancel-in-progress: false
+
+jobs:
+  prices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out the data branch
+        run: |
+          set +e
+          git ls-remote --exit-code --heads origin data
+          rc=$?
+          set -e
+          if [ "$rc" = "0" ]; then
+            git fetch --depth=1 origin data
+            git worktree add -B data out FETCH_HEAD
+          elif [ "$rc" = "2" ]; then
+            echo "First run: starting the data branch"
+            git worktree add --detach out
+            git -C out checkout --orphan data
+            git -C out rm -rf -q .
+          else
+            echo "Could not ask GitHub for the data branch"; exit 1
+          fi
+      - name: Read prices
+        run: node tools/prices.mjs out/prices.json
+      - name: Save
+        run: |
+          cd out
+          git config user.name "price-tracker"
+          git config user.email "price-tracker@users.noreply.github.com"
+          git add prices.json
+          git commit -q -m "Prices $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push origin data
