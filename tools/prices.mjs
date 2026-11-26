@@ -42,15 +42,26 @@ async function get(url) {
 
 function parseAmazon(html) {
   if (/captcha/i.test(html) && html.length < 20000) return { error: "captcha" };
-  // The price the page says you pay; the first "priceAmount" in its data is the same offer.
+  // The page lists its offers as data, each with a price and whether it is new or used (Amazon Resale).
+  // Only the new one counts: a used offer is cheaper and would show a discount nobody gets.
+  let fresh = null, withPrime = null;
+  for (const m of html.matchAll(/"priceAmount":([0-9.]+)[^{}]*?"buyingOptionType":"([A-Z_]+)"/g)) {
+    if (m[2] === "NEW" && fresh == null) fresh = money(m[1]);
+    if (m[2] === "PRIME_SAVINGS_UPSELL" && withPrime == null) withPrime = money(m[1]);
+  }
   const toPay = html.match(/priceToPay[^>]*class="aok-offscreen">\s*\$([0-9.,]+)/);
-  const price = money(toPay ? toPay[1] : (html.match(/"priceAmount":([0-9.]+)/) || [])[1]);
-  if (price == null) return { error: "no price on the page" };
-  const out = { price };
+  const shown = toPay ? money(toPay[1]) : null;
+  const price = fresh != null ? fresh : shown;
+  if (price == null) return { error: "no price for a new one on the page" };
+  const out = { price, via: fresh != null ? (shown === fresh ? "new+shown" : "new") : "shown" };
   const basis = html.match(/apex-basisprice-label">\s*(List Price|Typical price):\s*<\/span>\s*<span[^>]*apex-basisprice-value[^>]*>\s*<span class="a-offscreen">\$([0-9.,]+)/);
   const list = basis && money(basis[2]);
   if (list && list > price) { out.list = list; out.listLabel = basis[1] === "List Price" ? "list" : "typical"; }
-  if (/Exclusive Prime price|Prime Member Price/.test(html)) out.prime = true;
+  // A lower price for Prime members: show that one, marked as needing Prime, against the price without Prime.
+  if (withPrime != null && fresh != null && withPrime < fresh) {
+    out.price = withPrime; out.prime = true;
+    if (!(out.list > fresh)) { out.list = fresh; out.listLabel = "noprime"; }
+  }
   return out;
 }
 

@@ -223,7 +223,7 @@
 const A = "https://www.amazon.com/dp/";
 const ITEMS = [
   { id: "side-pillow", cat: "Sleep", emoji: "🛏️", title: "Side-sleeper pillow", name: "Coop Original Adjustable Pillow, queen",
-    price: 66.75, list: 89, prime: true, tracked: true, shop: ["Amazon", A + "B00EINBSEW"], tags: [] },
+    price: 66.75, list: 89, listLabel: "noprime", prime: true, tracked: true, shop: ["Amazon", A + "B00EINBSEW"], tags: [] },
   { id: "body-pillow", cat: "Sleep", emoji: "🧸", title: "Hugging body pillow", name: "Sleep Number Cool ComfortFit Body Pillow",
     price: 119.99, tracked: true, shop: ["Sleep Number", "https://www.sleepnumber.com/products/cool-comfortfit-body-pillow"], tags: [] },
 
@@ -360,7 +360,7 @@ function paintPrice(it) {
   v.was.hidden = v.save.hidden = !l;
   if (l) {
     v.was.textContent = "";
-    v.was.append(el("s", null, usd(l)), " " + (it.listLabel === "typical" ? "typical price" : "list price"));
+    v.was.append(el("s", null, usd(l)), " " + (it.listLabel === "typical" ? "typical price" : it.listLabel === "noprime" ? "without Prime" : "list price"));
     v.save.textContent = "save " + ap + usd(round2(l - total(it)));
   }
   v.prime.hidden = !it.prime;
@@ -515,7 +515,7 @@ async function refreshPrices() {
       if (!okPrice(p.price) || !(at <= soon) || at < priceAt.get(id)) continue;
       it.price = p.price;
       it.list = okPrice(p.list) && p.list > p.price ? p.list : null;
-      it.listLabel = p.listLabel === "typical" ? "typical" : "list";
+      it.listLabel = ["typical", "noprime"].includes(p.listLabel) ? p.listLabel : "list";
       it.prime = p.prime === true;
       priceAt.set(id, at);
     }
