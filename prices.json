@@ -1,7 +1,7 @@
 {
- "checkedAt": "2026-11-26T03:32:36.109Z",
- "ok": 15,
- "failed": 2,
+ "checkedAt": "2026-11-26T06:42:36.794Z",
+ "ok": 18,
+ "failed": 1,
  "items": {
   "side-pillow": {
    "price": 66.75,
@@ -9,101 +9,133 @@
    "prime": true,
    "list": 89,
    "listLabel": "noprime",
-   "at": "2026-11-26T03:31:35.622Z"
+   "src": "B00EINBSEW",
+   "at": "2026-11-26T06:41:22.060Z"
   },
   "headset": {
    "price": 92.8,
    "via": "new+shown",
    "list": 199.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:31:43.183Z"
+   "src": "B0BY1FXC9N",
+   "at": "2026-11-26T06:41:29.524Z"
   },
   "mic": {
    "price": 44.99,
    "via": "new+shown",
    "list": 56.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:31:47.376Z"
+   "src": "B0BMFQP2ZZ",
+   "at": "2026-11-26T06:41:32.592Z"
   },
   "boots": {
-   "price": 79.99,
+   "price": 103.99,
    "via": "new+shown",
-   "list": 99.99,
+   "list": 129.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:31:51.444Z"
+   "src": "B0G4F3J9XM",
+   "at": "2026-11-26T06:41:37.201Z"
   },
   "hat": {
    "price": 19.99,
    "via": "new+shown",
-   "at": "2026-11-26T03:31:58.373Z"
+   "src": "B002G9UDYG",
+   "at": "2026-11-26T06:41:54.134Z"
   },
   "face-mask": {
    "price": 30,
    "via": "new+shown",
-   "at": "2026-11-26T03:32:01.383Z"
-  },
-  "pants": {
-   "price": 54.99,
-   "via": "new+shown",
-   "at": "2026-11-26T03:32:04.898Z"
+   "src": "B0848XF4TC",
+   "at": "2026-11-26T06:41:57.622Z"
   },
   "towels": {
    "price": 24.99,
-   "at": "2026-11-26T03:29:04.808Z"
+   "via": "new+shown",
+   "src": "B0018N9A8G",
+   "at": "2026-11-26T06:42:09.344Z"
   },
   "sharpener": {
    "price": 96.75,
    "via": "new+shown",
    "list": 129,
    "listLabel": "typical",
-   "at": "2026-11-26T03:32:11.235Z"
+   "src": "B0CGGVHBQG",
+   "at": "2026-11-26T06:42:12.923Z"
   },
   "breading-trays": {
-   "price": 7.49,
+   "price": 8.99,
    "via": "new+shown",
    "list": 10,
    "listLabel": "list",
-   "at": "2026-11-26T03:32:14.826Z"
+   "src": "B079Q1GT7H",
+   "at": "2026-11-26T06:42:15.841Z"
   },
   "fryer": {
    "price": 104.44,
    "via": "new+shown",
    "list": 149.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:32:19.262Z"
-  },
-  "rice-cooker": {
-   "price": 37.99,
-   "via": "new+shown",
-   "list": 43.99,
-   "listLabel": "typical",
-   "at": "2026-11-26T03:32:23.929Z"
+   "src": "B00NQ7QFGM",
+   "at": "2026-11-26T06:42:19.598Z"
   },
   "cat-tree": {
    "price": 44.73,
    "via": "new+shown",
    "list": 49.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:32:27.699Z"
+   "src": "B0795T91YP",
+   "at": "2026-11-26T06:42:24.311Z"
   },
   "cat-harness": {
-   "price": 15.99,
+   "price": 12.06,
    "via": "new+shown",
-   "at": "2026-11-26T03:32:30.775Z"
+   "list": 13.99,
+   "listLabel": "list",
+   "src": "B0CLVQQ897",
+   "at": "2026-11-26T06:42:28.952Z"
   },
   "pet-puzzle": {
    "price": 11.02,
    "via": "new+shown",
    "list": 20.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:32:34.060Z"
+   "src": "B0711Y9XTF",
+   "at": "2026-11-26T06:42:33.182Z"
   },
   "cleats": {
    "price": 41.77,
    "via": "new+shown",
    "list": 63.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:31:54.410Z"
+   "src": "B01BZHF97U",
+   "at": "2026-11-26T06:41:41.577Z"
+  },
+  "coat": {
+   "price": 179.99,
+   "via": "new+shown",
+   "list": 240,
+   "listLabel": "list",
+   "src": "B0CLR9F8TF",
+   "at": "2026-11-26T06:41:45.440Z"
+  },
+  "gloves": {
+   "price": 70,
+   "via": "new+shown",
+   "src": "B0FXVZGF65",
+   "at": "2026-11-26T06:41:49.474Z"
+  },
+  "lined-pants": {
+   "price": 30.35,
+   "via": "new+shown",
+   "list": 37.95,
+   "listLabel": "list",
+   "src": "B0888CY66P",
+   "at": "2026-11-26T06:42:01.658Z"
+  },
+  "socks": {
+   "price": 25,
+   "src": "https://darntough.com/products/mens-merino-wool-light-hiker-micro-crew-cushioned-lightweight-hiking-socks",
+   "at": "2026-11-26T06:42:04.524Z"
   }
  }
 }
