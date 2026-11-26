@@ -1,44 +1,51 @@
 {
- "checkedAt": "2026-11-26T03:29:33.625Z",
+ "checkedAt": "2026-11-26T03:32:36.109Z",
  "ok": 15,
  "failed": 2,
  "items": {
   "side-pillow": {
    "price": 66.75,
-   "list": 89,
-   "listLabel": "list",
+   "via": "new",
    "prime": true,
-   "at": "2026-11-26T03:28:28.750Z"
+   "list": 89,
+   "listLabel": "noprime",
+   "at": "2026-11-26T03:31:35.622Z"
   },
   "headset": {
-   "price": 80.59,
+   "price": 92.8,
+   "via": "new+shown",
    "list": 199.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:28:36.853Z"
+   "at": "2026-11-26T03:31:43.183Z"
   },
   "mic": {
    "price": 44.99,
+   "via": "new+shown",
    "list": 56.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:28:41.055Z"
+   "at": "2026-11-26T03:31:47.376Z"
   },
   "boots": {
    "price": 79.99,
+   "via": "new+shown",
    "list": 99.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:28:44.143Z"
+   "at": "2026-11-26T03:31:51.444Z"
   },
   "hat": {
    "price": 19.99,
-   "at": "2026-11-26T03:28:51.669Z"
+   "via": "new+shown",
+   "at": "2026-11-26T03:31:58.373Z"
   },
   "face-mask": {
    "price": 30,
-   "at": "2026-11-26T03:28:56.304Z"
+   "via": "new+shown",
+   "at": "2026-11-26T03:32:01.383Z"
   },
   "pants": {
    "price": 54.99,
-   "at": "2026-11-26T03:28:59.796Z"
+   "via": "new+shown",
+   "at": "2026-11-26T03:32:04.898Z"
   },
   "towels": {
    "price": 24.99,
@@ -46,43 +53,57 @@
   },
   "sharpener": {
    "price": 96.75,
+   "via": "new+shown",
    "list": 129,
    "listLabel": "typical",
-   "at": "2026-11-26T03:29:08.626Z"
+   "at": "2026-11-26T03:32:11.235Z"
   },
   "breading-trays": {
    "price": 7.49,
+   "via": "new+shown",
    "list": 10,
    "listLabel": "list",
-   "at": "2026-11-26T03:29:11.512Z"
+   "at": "2026-11-26T03:32:14.826Z"
   },
   "fryer": {
    "price": 104.44,
+   "via": "new+shown",
    "list": 149.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:29:14.553Z"
+   "at": "2026-11-26T03:32:19.262Z"
   },
   "rice-cooker": {
    "price": 37.99,
+   "via": "new+shown",
    "list": 43.99,
    "listLabel": "typical",
-   "at": "2026-11-26T03:29:18.764Z"
+   "at": "2026-11-26T03:32:23.929Z"
   },
   "cat-tree": {
    "price": 44.73,
+   "via": "new+shown",
    "list": 49.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:29:22.081Z"
+   "at": "2026-11-26T03:32:27.699Z"
   },
   "cat-harness": {
    "price": 15.99,
-   "at": "2026-11-26T03:29:25.522Z"
+   "via": "new+shown",
+   "at": "2026-11-26T03:32:30.775Z"
   },
   "pet-puzzle": {
    "price": 11.02,
+   "via": "new+shown",
    "list": 20.99,
    "listLabel": "list",
-   "at": "2026-11-26T03:29:30.392Z"
+   "at": "2026-11-26T03:32:34.060Z"
+  },
+  "cleats": {
+   "price": 41.77,
+   "via": "new+shown",
+   "list": 63.99,
+   "listLabel": "list",
+   "at": "2026-11-26T03:31:54.410Z"
   }
  }
 }
