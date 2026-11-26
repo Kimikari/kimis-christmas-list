@@ -101,15 +101,17 @@
   .card[hidden], .got[hidden] { display: none; }
   .card.in { animation: none; }
   .card.picked { outline: 4px solid var(--gold); outline-offset: 2px; }
-  @media (hover: hover) { .card:hover { transform: translateY(-4px) rotate(-.4deg); box-shadow: 0 9px 0 #0005; } .card:hover .emoji { transform: scale(1.18) rotate(8deg); } }
+  @media (hover: hover) { .card:hover { transform: translateY(-4px) rotate(-.4deg); box-shadow: 0 9px 0 #0005; } .card:hover .photo img { transform: scale(1.08) rotate(-2deg); } }
   @keyframes pop { from { opacity: 0; transform: translateY(14px) scale(.96); } }
   .card.spot { animation: spot 1.6s; }
   @keyframes spot { 0%, 100% { box-shadow: 0 4px 0 #0005; } 20%, 70% { box-shadow: 0 0 0 5px var(--gold), 0 0 30px 8px #e0ad4a99; transform: scale(1.03); } }
-  .top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .emoji { font-size: 2.3rem; line-height: 1; transition: transform .2s; flex: none; }
+  .photo { height: 150px; background: #fff; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .photo img { max-width: 100%; max-height: 100%; width: auto; height: 134px; object-fit: contain; transition: transform .25s; }
+  .photo.none img { display: none; }
+  .photo.none::after { content: "🎁"; font-size: 3rem; }
+  .top { margin-bottom: 8px; }
   .cat { font-size: .7rem; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); }
   .card h2 { margin: 0; font-size: 1.08rem; line-height: 1.2; }
-  .name { font-size: .93rem; color: #33423d; margin: 0 0 8px; }
   .off {
     position: absolute; top: 10px; right: -34px; transform: rotate(40deg); background: var(--red); color: #fff;
     font-weight: 750; font-size: .82rem; padding: 3px 38px; box-shadow: 0 2px 4px #0003;
@@ -143,9 +145,9 @@
   .card.bought::after { content: "🎀"; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); font-size: 2.6rem; }
   .card.bought > * { position: relative; z-index: 1; }
   .card.bought .top { margin-top: 30px; }
-  .card.bought .cat, .card.bought .name { color: #ffe3e3; }
-  .card.bought .prices, .card.bought .fresh, .card.bought .tags, .card.bought .buy, .card.bought .off { display: none; }
-  .card.bought .top, .card.bought .name, .wrapped { background: #7d151aee; border-radius: 10px; padding: 6px 10px; }
+  .card.bought .cat { color: #ffe3e3; }
+  .card.bought .photo, .card.bought .prices, .card.bought .fresh, .card.bought .tags, .card.bought .buy, .card.bought .off { display: none; }
+  .card.bought .top, .wrapped { background: #7d151aee; border-radius: 10px; padding: 6px 10px; }
   .wrapped { font-weight: 750; text-align: center; margin: 0 0 10px; }
   .card:not(.bought) .wrapped { display: none; }
   .card.bought .got { background: transparent; color: #ffe3e3; border: 0; text-decoration: underline; font-weight: 500; font-size: .85rem; min-height: 40px; }
@@ -188,7 +190,6 @@
 <div class="tools">
     <label>Budget <input type="range" id="budget" min="10" max="130" step="5" value="130" aria-describedby="budgetOut"> <output id="budgetOut" for="budget">any</output></label>
     <label>Sort <select id="sort">
-      <option value="list">Kimi's order</option>
       <option value="off">Biggest discount</option>
       <option value="low">Price: low to high</option>
       <option value="high">Price: high to low</option>
@@ -217,59 +218,58 @@
 "use strict";
 /* ---------- The list ----------
    id: never change one (it ties a gift to its price and to its "bought" mark).
-   price/list: the prices seen on 2026-11-25, used until the tracked prices load.
+   price/list: the prices seen on 2026-11-26, used until the tracked prices load.
    tracked: the price is read from the shop by tools/prices.mjs. qty: how many to buy.
-   tags: short facts a buyer needs (size, color, quantity); no reasons. */
+   tags: short facts a buyer needs (size, color, quantity); no reasons.
+   The photo of a gift is img/<id>.jpg. */
 const A = "https://www.amazon.com/dp/";
 const ITEMS = [
-  { id: "side-pillow", cat: "Sleep", emoji: "🛏️", title: "Side-sleeper pillow", name: "Coop Original Adjustable Pillow, queen",
+  { id: "side-pillow", cat: "Sleep", name: "Coop Original Adjustable Pillow, queen",
     price: 66.75, list: 89, listLabel: "noprime", prime: true, tracked: true, shop: ["Amazon", A + "B00EINBSEW"], tags: [] },
-  { id: "body-pillow", cat: "Sleep", emoji: "🧸", title: "Hugging body pillow", name: "Sleep Number Cool ComfortFit Body Pillow",
+  { id: "body-pillow", cat: "Sleep", name: "Sleep Number Cool ComfortFit Body Pillow",
     price: 119.99, tracked: true, shop: ["Sleep Number", "https://www.sleepnumber.com/products/cool-comfortfit-body-pillow"], tags: [] },
 
-  { id: "headset", cat: "Gaming", emoji: "🎧", title: "Wireless gaming headset", name: "Razer BlackShark V2 Pro (2023)",
-    price: 92.80, list: 199.99, tracked: true, shop: ["Amazon", A + "B0BY1FXC9N"], tags: ["Color: black"] },
-  { id: "mic", cat: "Gaming", emoji: "🎙️", title: "Gaming mic", name: "Fifine AmpliGame AM8 USB dynamic mic",
+  { id: "headset", cat: "Gaming", name: "Razer BlackShark V2 Pro wireless headset (2023)",
+    price: 80.59, list: 199.99, tracked: true, shop: ["Amazon", A + "B0BY1FXC9N"], tags: ["Color: black"] },
+  { id: "mic", cat: "Gaming", name: "Fifine AmpliGame AM8 USB dynamic mic",
     price: 44.99, list: 56.99, tracked: true, shop: ["Amazon", A + "B0BMFQP2ZZ"], tags: ["Color: black"] },
 
-  { id: "boots", cat: "Winter", emoji: "🥾", title: "Boots that grip on ice", name: "Kamik Nation Plus snow boots, men's",
-    price: 79.99, list: 99.99, tracked: true, shop: ["Amazon", A + "B00AZODA80"], tags: ["Ask Kimi for his size and color", "Price changes with size"] },
-  { id: "cleats", cat: "Winter", emoji: "🧊", title: "Ice cleats for the boots", name: "Yaktrax ICEtrekkers Diamond Grip",
+  { id: "boots", cat: "Winter", name: "Kamik Nation Plus snow boots, men's",
+    price: 103.99, list: 129.99, tracked: true, shop: ["Amazon", A + "B0G4F3J9XM"], tags: ["Color: black", "Ask Kimi for his size"] },
+  { id: "cleats", cat: "Winter", name: "Yaktrax ICEtrekkers Diamond Grip ice cleats",
     price: 41.77, list: 63.99, tracked: true, shop: ["Amazon", A + "B01BZHF97U"], tags: ["Sized to the boot: ask Kimi"] },
-  { id: "coat", cat: "Winter", emoji: "🧥", title: "Winter coat", name: "Columbia Landroamer II parka, men's",
-    price: 180, list: 240, approx: true, shop: ["REI", "https://www.rei.com/product/236425/columbia-landroamer-ii-insulated-parka-mens"], tags: ["Ask Kimi for his size and color", "Runs large"] },
-  { id: "gloves", cat: "Winter", emoji: "🧤", title: "Gloves", name: "The North Face Montana Ski Gloves, men's",
-    price: 65, approx: true, shop: ["REI", "https://www.rei.com/product/239479/the-north-face-montana-ski-gloves-mens"], tags: ["Ask Kimi for his size and color"] },
-  { id: "hat", cat: "Winter", emoji: "🧢", title: "Hat", name: "Carhartt A18 knit cuffed beanie",
-    price: 19.99, tracked: true, shop: ["Amazon", A + "B002G9UDYG"], tags: ["Ask Kimi for the color"] },
-  { id: "face-mask", cat: "Winter", emoji: "🥶", title: "Face mask for the wind", name: "Buff ThermoNet neck gaiter",
-    price: 30, tracked: true, shop: ["Amazon", A + "B0848XF4TC"], tags: ["Ask Kimi for the color"] },
-  { id: "base-layer", cat: "Winter", emoji: "👕", title: "Warm shirt", name: "REI Co-op Midweight Long-Sleeve Crew base layer, men's",
-    price: 45, approx: true, shop: ["REI", "https://www.rei.com/search?q=rei+co-op+midweight+long-sleeve+crew+base+layer+top+mens"], tags: ["Ask Kimi for his size and color"] },
-  { id: "pants", cat: "Winter", emoji: "👖", title: "Warm pants", name: "Carhartt Relaxed Straight flannel-lined jean, men's",
-    price: 54.99, tracked: true, shop: ["Amazon", A + "B0B4F1J941"], tags: ["Ask Kimi for his waist, length and color", "Tight in the hips"] },
-  { id: "socks", cat: "Winter", emoji: "🧦", title: "Socks", name: "Darn Tough Light Hiker Micro Crew, men's merino",
-    price: 25, approx: true, shop: ["Amazon", A + "B07N1T79DP"], tags: ["Ask Kimi for his size and color", "Price is per pair"] },
+  { id: "coat", cat: "Winter", name: "Columbia Landroamer II parka, men's",
+    price: 179.99, list: 240, tracked: true, shop: ["Amazon", A + "B0CLR9F8TF"], tags: ["Color: black", "Ask Kimi for his size", "Runs large"] },
+  { id: "gloves", cat: "Winter", name: "The North Face Montana Ski Gloves, men's",
+    price: 70, tracked: true, shop: ["Amazon", A + "B0FXVZGF65"], tags: ["Color: TNF Black", "Ask Kimi for his size"] },
+  { id: "hat", cat: "Winter", name: "Carhartt A18 knit cuffed beanie",
+    price: 19.99, tracked: true, shop: ["Amazon", A + "B002G9UDYG"], tags: ["Color: black"] },
+  { id: "face-mask", cat: "Winter", name: "Buff ThermoNet neck gaiter",
+    price: 24, list: 30, tracked: true, shop: ["Amazon", A + "B0848XF4TC"], tags: ["Color: black"] },
+  { id: "base-layer", cat: "Winter", name: "REI Co-op Midweight Long-Sleeve Crew base layer, men's",
+    price: 45, approx: true, shop: ["REI", "https://www.rei.com/search?q=rei+co-op+midweight+long-sleeve+crew+base+layer+top+mens"], tags: ["Color: black", "Ask Kimi for his size"] },
+  { id: "lined-pants", cat: "Winter", name: "Wrangler Authentics fleece-lined cargo pants, men's",
+    price: 30.35, list: 37.95, tracked: true, shop: ["Amazon", A + "B0888CY66P"], tags: ["Color: Black Twill", "Ask Kimi for his waist and length"] },
+  { id: "socks", cat: "Winter", name: "Darn Tough Light Hiker Micro Crew socks, men's merino",
+    price: 25, tracked: true, shop: ["Darn Tough", "https://darntough.com/products/mens-merino-wool-light-hiker-micro-crew-cushioned-lightweight-hiking-socks"], tags: ["Color: black", "Ask Kimi for his size", "Price is per pair"] },
 
-  { id: "towels", cat: "Kitchen", emoji: "🧻", title: "Fast-drying hand towels", name: "Aunt Martha's flour sack towels, 7 pack",
+  { id: "towels", cat: "Kitchen", name: "Aunt Martha's flour sack dish towels, 7 pack",
     price: 24.99, tracked: true, shop: ["Amazon", A + "B0018N9A8G"], tags: [] },
-  { id: "sharpener", cat: "Kitchen", emoji: "🔪", title: "Rolling knife sharpener", name: "The Original Tumbler rolling sharpener",
-    price: 96.75, list: 129, listLabel: "typical", tracked: true, shop: ["Amazon", A + "B0CGGVHBQG"], tags: ["Ask Kimi for the color"] },
-  { id: "breading-trays", cat: "Kitchen", emoji: "🍤", title: "Breading trays", name: "Nordic Ware Naturals eighth sheet pans, three of them",
-    price: 7.49, list: 10, qty: 3, tracked: true, shop: ["Amazon", A + "B079Q1GT7H"], tags: ["Set the quantity to 3"] },
-  { id: "fryer", cat: "Kitchen", emoji: "🍟", title: "Deep fryer that filters its oil", name: "T-fal Ultimate EZ Clean fryer, 3.5 L",
+  { id: "sharpener", cat: "Kitchen", name: "The Original Tumbler rolling knife sharpener",
+    price: 96.75, list: 129, listLabel: "typical", tracked: true, shop: ["Amazon", A + "B0CGGVHBQG"], tags: ["Color: wood"] },
+  { id: "breading-trays", cat: "Kitchen", name: "Nordic Ware Naturals eighth sheet pans, three of them",
+    price: 8.99, list: 10, qty: 3, tracked: true, shop: ["Amazon", A + "B079Q1GT7H"], tags: ["Set the quantity to 3"] },
+  { id: "fryer", cat: "Kitchen", name: "T-fal Ultimate EZ Clean deep fryer, 3.5 L",
     price: 104.44, list: 149.99, tracked: true, shop: ["Amazon", A + "B00NQ7QFGM"], tags: [] },
-  { id: "rice-cooker", cat: "Kitchen", emoji: "🍚", title: "Rice cooker", name: "Aroma Select Stainless rice cooker, 3-cup",
-    price: 37.99, list: 43.99, listLabel: "typical", tracked: true, shop: ["Amazon", A + "B007TNXYYA"], tags: [] },
 
-  { id: "cat-tree", cat: "Pets", emoji: "🐈", title: "Cat tree", name: "Feandrea 33.1-inch cat tower",
-    price: 44.73, list: 49.99, tracked: true, shop: ["Amazon", A + "B0795T91YP"], tags: ["Ask Kimi for the color"] },
-  { id: "cat-harness", cat: "Pets", emoji: "🐾", title: "Cat harness and leash", name: "Voyager Step-In cat harness with 5 ft leash",
-    price: 15.99, tracked: true, shop: ["Amazon", A + "B0844ZDSWT"], tags: ["Ask Kimi for the cat's chest size and the color", "Runs small"] },
-  { id: "pet-puzzle", cat: "Pets", emoji: "🧩", title: "Treat puzzle for the dog and the cat", name: "Nina Ottosson Dog Brick treat puzzle",
+  { id: "cat-tree", cat: "Pets", name: "Feandrea 33.1-inch cat tower",
+    price: 44.73, list: 49.99, tracked: true, shop: ["Amazon", A + "B0795T91YP"], tags: ["Color: light gray"] },
+  { id: "cat-harness", cat: "Pets", name: "Voyager Step-In cat harness with leash",
+    price: 12.06, list: 13.99, tracked: true, shop: ["Amazon", A + "B0CLVQQ897"], tags: ["Color: black", "Ask Kimi for the cat's chest size", "Price changes with size", "Runs small"] },
+  { id: "pet-puzzle", cat: "Pets", name: "Nina Ottosson Dog Brick treat puzzle",
     price: 11.02, list: 20.99, tracked: true, shop: ["Amazon", A + "B0711Y9XTF"], tags: [] },
 ];
-const BASE_DATE = Date.parse("2026-11-26T02:55:00Z");   // when the prices above were read from the shops
+const BASE_DATE = Date.parse("2026-11-26T06:20:00Z");   // when the prices above were read from the shops
 const PRICES_URL = "https://raw.githubusercontent.com/Kimikari/kimis-christmas-list/data/prices.json";
 // The shared "already bought" list: one small public text record, {"<id>": <time it was marked>}.
 const STORE_READ = "https://textdb.online/kimis-xmas-bought-q7w3k9x2";
@@ -303,7 +303,10 @@ let bought = {};               // id -> +time it was marked bought, or -time it 
 let storeOk = null;            // null: not read yet, true/false: the last read worked or not
 let readNo = 0;                // counts reads and saves, so that an older read cannot undo a newer save on screen
 let kimi = lsGet("xmas-kimi") === "1";
-let filterCat = "All", sortBy = "list";
+let filterCat = "All", sortBy = "off";
+// Where the tracker reads an item's price: the Amazon product number, or the shop's page.
+// A tracked price that was read from another page (an earlier pick under the same id) is not used.
+const srcOf = it => (it.shop[1].startsWith(A) ? it.shop[1].slice(A.length) : it.shop[1]);
 const priceAt = new Map();     // id -> time its price was read
 for (const it of ITEMS) priceAt.set(it.id, BASE_DATE);
 // What this device marked itself (id -> +time or -time), to put a mark back when the shared list lost it.
@@ -326,9 +329,13 @@ function makeCard(it, i) {
   const off = el("div", "off");
   const top = el("div", "top");
   const head = el("div");
-  head.append(el("div", "cat", it.cat), el("h2", null, it.title));
-  top.append(el("div", "emoji", it.emoji), head);
-  top.firstChild.setAttribute("aria-hidden", "true");
+  head.append(el("div", "cat", it.cat), el("h2", null, it.name));
+  top.append(head);
+  const photo = el("div", "photo"), img = el("img");
+  img.alt = ""; img.loading = "lazy"; img.decoding = "async"; img.width = 134; img.height = 134;
+  img.addEventListener("error", () => photo.classList.add("none"));
+  img.src = "img/" + it.id + ".jpg";
+  photo.append(img);
   const wrapped = el("p", "wrapped", "🎁 Already bought");
   const prices = el("div", "prices");
   const now = el("span", "now"), was = el("span", "was"), save = el("span", "save"), prime = el("span", "save prime", "needs Prime");
@@ -342,7 +349,7 @@ function makeCard(it, i) {
   const got = el("button", "got"); got.type = "button";
   const msg = el("p", "msg"); msg.setAttribute("role", "alert");
   acts.append(buy, got, msg);
-  c.append(off, top, wrapped, el("p", "name", it.name), prices, fresh);
+  c.append(off, photo, top, wrapped, prices, fresh);
   if (it.tags.length) c.append(tags);
   c.append(acts);
   const v = { card: c, off, now, was, save, prime, fresh, got, msg, armed: 0, want: false, busy: false };
@@ -465,8 +472,8 @@ async function onGot(it, v) {
     await setMark(it.id, on);
     v.busy = false;
     paintAll();
-    if (on) { celebrate(v.card); say(it.title + " is marked as bought for everyone."); }
-    else say(it.title + " is no longer marked as bought.");
+    if (on) { celebrate(v.card); say(it.name + " is marked as bought for everyone."); }
+    else say(it.name + " is no longer marked as bought.");
     setTimeout(refreshBought, 4000);
   } catch {
     v.busy = false; paintBought(it);
@@ -512,7 +519,7 @@ async function refreshPrices() {
       const it = byId.get(id);
       if (!it || !it.tracked || !p || typeof p !== "object") continue;
       const at = Date.parse(p.at);
-      if (!okPrice(p.price) || !(at <= soon) || at < priceAt.get(id)) continue;
+      if (p.src !== srcOf(it) || !okPrice(p.price) || !(at <= soon) || at < priceAt.get(id)) continue;
       it.price = p.price;
       it.list = okPrice(p.list) && p.list > p.price ? p.list : null;
       it.listLabel = ["typical", "noprime"].includes(p.listLabel) ? p.listLabel : "list";
@@ -613,7 +620,7 @@ $("santa").addEventListener("click", () => {
   c.scrollIntoView({ block: "center", behavior: calm.matches ? "auto" : "smooth" });
   c.classList.remove("spot"); void c.offsetWidth; c.classList.add("spot", "picked");
   setTimeout(() => c.classList.remove("picked"), 3000);
-  say("Santa picked: " + it.title + ", " + usd(total(it)));
+  say("Santa picked: " + it.name + ", " + usd(total(it)));
 });
 $("kimiBtn").addEventListener("click", () => { kimi = !kimi; lsSet("xmas-kimi", kimi ? "1" : "0"); reorder(); paintAll(); });
 
@@ -707,6 +714,8 @@ calm.addEventListener("change", runSnow);
 
 /* ---------- Start ---------- */
 ITEMS.forEach((it, i) => $("grid").append(makeCard(it, i)));
+sortBy = $("sort").value || "off";   // a browser may bring back the choice of the last visit
+reorder();
 paintBudget(); paintCount(); sizeSnow(); runSnow(); paintAll();
 refreshBought(); refreshPrices();
 setInterval(refreshBought, 45000);

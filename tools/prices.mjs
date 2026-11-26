@@ -13,18 +13,20 @@ const TRACKED = {
   "body-pillow": { url: "https://www.sleepnumber.com/products/cool-comfortfit-body-pillow" },
   "headset": { asin: "B0BY1FXC9N" },
   "mic": { asin: "B0BMFQP2ZZ" },
-  "boots": { asin: "B00AZODA80" },
+  "boots": { asin: "B0G4F3J9XM" },
   "cleats": { asin: "B01BZHF97U" },
+  "coat": { asin: "B0CLR9F8TF" },
+  "gloves": { asin: "B0FXVZGF65" },
   "hat": { asin: "B002G9UDYG" },
   "face-mask": { asin: "B0848XF4TC" },
-  "pants": { asin: "B0B4F1J941" },
+  "lined-pants": { asin: "B0888CY66P" },
+  "socks": { url: "https://darntough.com/products/mens-merino-wool-light-hiker-micro-crew-cushioned-lightweight-hiking-socks" },
   "towels": { asin: "B0018N9A8G" },
   "sharpener": { asin: "B0CGGVHBQG" },
   "breading-trays": { asin: "B079Q1GT7H" },
   "fryer": { asin: "B00NQ7QFGM" },
-  "rice-cooker": { asin: "B007TNXYYA" },
   "cat-tree": { asin: "B0795T91YP" },
-  "cat-harness": { asin: "B0844ZDSWT" },
+  "cat-harness": { asin: "B0CLVQQ897" },
   "pet-puzzle": { asin: "B0711Y9XTF" },
 };
 
@@ -94,11 +96,13 @@ for (const [id, src] of Object.entries(TRACKED)) {
     const page = await get(src.asin ? "https://www.amazon.com/gp/aw/d/" + src.asin : src.url);
     res = page.status !== 200 ? { error: "HTTP " + page.status } : src.asin ? parseAmazon(page.text) : parseJsonLd(page.text);
   } catch (e) { res = { error: String(e && e.message || e) }; }
-  const last = items[id] && items[id].price;
+  const from = src.asin || src.url;
+  // The last price only counts as a comparison when it was read from the same product page.
+  const last = items[id] && items[id].src === from && items[id].price;
   // A jump this large is far more often another offer on the page than a real price change.
   if (!res.error && last && (res.price < last * 0.4 || res.price > last * 2.5)) res = { error: `SUSPECT price ${res.price}` };
   if (res.error) { failed++; console.log(`${id}: FAILED (${res.error})` + (items[id] ? `, keeping ${items[id].price} from ${items[id].at}` : "")); }
-  else { ok++; items[id] = { ...res, at: new Date().toISOString() }; console.log(`${id}: ${res.price}` + (res.list ? ` (${res.listLabel} ${res.list})` : "") + (res.prime ? " [Prime]" : "")); }
+  else { ok++; items[id] = { ...res, src: from, at: new Date().toISOString() }; console.log(`${id}: ${res.price}` + (res.list ? ` (${res.listLabel} ${res.list})` : "") + (res.prime ? " [Prime]" : "")); }
   await sleep(2000 + Math.random() * 2000);
 }
 
