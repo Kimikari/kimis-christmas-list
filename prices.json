@@ -1,0 +1,88 @@
+{
+ "checkedAt": "2026-11-26T03:29:33.625Z",
+ "ok": 15,
+ "failed": 2,
+ "items": {
+  "side-pillow": {
+   "price": 66.75,
+   "list": 89,
+   "listLabel": "list",
+   "prime": true,
+   "at": "2026-11-26T03:28:28.750Z"
+  },
+  "headset": {
+   "price": 80.59,
+   "list": 199.99,
+   "listLabel": "list",
+   "at": "2026-11-26T03:28:36.853Z"
+  },
+  "mic": {
+   "price": 44.99,
+   "list": 56.99,
+   "listLabel": "list",
+   "at": "2026-11-26T03:28:41.055Z"
+  },
+  "boots": {
+   "price": 79.99,
+   "list": 99.99,
+   "listLabel": "list",
+   "at": "2026-11-26T03:28:44.143Z"
+  },
+  "hat": {
+   "price": 19.99,
+   "at": "2026-11-26T03:28:51.669Z"
+  },
+  "face-mask": {
+   "price": 30,
+   "at": "2026-11-26T03:28:56.304Z"
+  },
+  "pants": {
+   "price": 54.99,
+   "at": "2026-11-26T03:28:59.796Z"
+  },
+  "towels": {
+   "price": 24.99,
+   "at": "2026-11-26T03:29:04.808Z"
+  },
+  "sharpener": {
+   "price": 96.75,
+   "list": 129,
+   "listLabel": "typical",
+   "at": "2026-11-26T03:29:08.626Z"
+  },
+  "breading-trays": {
+   "price": 7.49,
+   "list": 10,
+   "listLabel": "list",
+   "at": "2026-11-26T03:29:11.512Z"
+  },
+  "fryer": {
+   "price": 104.44,
+   "list": 149.99,
+   "listLabel": "list",
+   "at": "2026-11-26T03:29:14.553Z"
+  },
+  "rice-cooker": {
+   "price": 37.99,
+   "list": 43.99,
+   "listLabel": "typical",
+   "at": "2026-11-26T03:29:18.764Z"
+  },
+  "cat-tree": {
+   "price": 44.73,
+   "list": 49.99,
+   "listLabel": "list",
+   "at": "2026-11-26T03:29:22.081Z"
+  },
+  "cat-harness": {
+   "price": 15.99,
+   "at": "2026-11-26T03:29:25.522Z"
+  },
+  "pet-puzzle": {
+   "price": 11.02,
+   "list": 20.99,
+   "listLabel": "list",
+   "at": "2026-11-26T03:29:30.392Z"
+  }
+ }
+}
