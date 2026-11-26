@@ -1,6 +1,6 @@
 {
- "checkedAt": "2026-11-26T06:42:36.794Z",
- "ok": 18,
+ "checkedAt": "2026-11-26T07:15:12.916Z",
+ "ok": 17,
  "failed": 1,
  "items": {
   "side-pillow": {
@@ -10,15 +10,15 @@
    "list": 89,
    "listLabel": "noprime",
    "src": "B00EINBSEW",
-   "at": "2026-11-26T06:41:22.060Z"
+   "at": "2026-11-26T07:14:04.624Z"
   },
   "headset": {
-   "price": 92.8,
+   "price": 80.59,
    "via": "new+shown",
    "list": 199.99,
    "listLabel": "list",
    "src": "B0BY1FXC9N",
-   "at": "2026-11-26T06:41:29.524Z"
+   "at": "2026-11-26T07:14:10.051Z"
   },
   "mic": {
    "price": 44.99,
@@ -26,33 +26,35 @@
    "list": 56.99,
    "listLabel": "list",
    "src": "B0BMFQP2ZZ",
-   "at": "2026-11-26T06:41:32.592Z"
+   "at": "2026-11-26T07:14:13.439Z"
   },
   "boots": {
    "price": 103.99,
    "via": "new+shown",
    "list": 129.99,
    "listLabel": "list",
-   "src": "B0G4F3J9XM",
-   "at": "2026-11-26T06:41:37.201Z"
+   "src": "B0G4F2XKCR",
+   "at": "2026-11-26T07:14:18.118Z"
   },
   "hat": {
    "price": 19.99,
    "via": "new+shown",
    "src": "B002G9UDYG",
-   "at": "2026-11-26T06:41:54.134Z"
+   "at": "2026-11-26T07:14:30.257Z"
   },
   "face-mask": {
-   "price": 30,
+   "price": 24,
    "via": "new+shown",
+   "list": 30,
+   "listLabel": "list",
    "src": "B0848XF4TC",
-   "at": "2026-11-26T06:41:57.622Z"
+   "at": "2026-11-26T07:14:33.435Z"
   },
   "towels": {
-   "price": 24.99,
+   "price": 11.99,
    "via": "new+shown",
-   "src": "B0018N9A8G",
-   "at": "2026-11-26T06:42:09.344Z"
+   "src": "B00UABQ5J4",
+   "at": "2026-11-26T07:14:44.153Z"
   },
   "sharpener": {
    "price": 96.75,
@@ -60,7 +62,7 @@
    "list": 129,
    "listLabel": "typical",
    "src": "B0CGGVHBQG",
-   "at": "2026-11-26T06:42:12.923Z"
+   "at": "2026-11-26T07:14:48.483Z"
   },
   "breading-trays": {
    "price": 8.99,
@@ -68,7 +70,7 @@
    "list": 10,
    "listLabel": "list",
    "src": "B079Q1GT7H",
-   "at": "2026-11-26T06:42:15.841Z"
+   "at": "2026-11-26T07:14:53.286Z"
   },
   "fryer": {
    "price": 104.44,
@@ -76,7 +78,7 @@
    "list": 149.99,
    "listLabel": "list",
    "src": "B00NQ7QFGM",
-   "at": "2026-11-26T06:42:19.598Z"
+   "at": "2026-11-26T07:14:57.551Z"
   },
   "cat-tree": {
    "price": 44.73,
@@ -84,7 +86,7 @@
    "list": 49.99,
    "listLabel": "list",
    "src": "B0795T91YP",
-   "at": "2026-11-26T06:42:24.311Z"
+   "at": "2026-11-26T07:15:02.193Z"
   },
   "cat-harness": {
    "price": 12.06,
@@ -92,7 +94,7 @@
    "list": 13.99,
    "listLabel": "list",
    "src": "B0CLVQQ897",
-   "at": "2026-11-26T06:42:28.952Z"
+   "at": "2026-11-26T07:15:06.417Z"
   },
   "pet-puzzle": {
    "price": 11.02,
@@ -100,15 +102,7 @@
    "list": 20.99,
    "listLabel": "list",
    "src": "B0711Y9XTF",
-   "at": "2026-11-26T06:42:33.182Z"
-  },
-  "cleats": {
-   "price": 41.77,
-   "via": "new+shown",
-   "list": 63.99,
-   "listLabel": "list",
-   "src": "B01BZHF97U",
-   "at": "2026-11-26T06:41:41.577Z"
+   "at": "2026-11-26T07:15:10.648Z"
   },
   "coat": {
    "price": 179.99,
@@ -116,26 +110,26 @@
    "list": 240,
    "listLabel": "list",
    "src": "B0CLR9F8TF",
-   "at": "2026-11-26T06:41:45.440Z"
+   "at": "2026-11-26T07:14:21.131Z"
   },
   "gloves": {
    "price": 70,
    "via": "new+shown",
-   "src": "B0FXVZGF65",
-   "at": "2026-11-26T06:41:49.474Z"
+   "src": "B0FXVXMW5Z",
+   "at": "2026-11-26T07:14:25.786Z"
   },
   "lined-pants": {
    "price": 30.35,
    "via": "new+shown",
    "list": 37.95,
    "listLabel": "list",
-   "src": "B0888CY66P",
-   "at": "2026-11-26T06:42:01.658Z"
+   "src": "B088856W2V",
+   "at": "2026-11-26T07:14:37.496Z"
   },
   "socks": {
    "price": 25,
    "src": "https://darntough.com/products/mens-merino-wool-light-hiker-micro-crew-cushioned-lightweight-hiking-socks",
-   "at": "2026-11-26T06:42:04.524Z"
+   "at": "2026-11-26T07:14:40.899Z"
   }
  }
 }
