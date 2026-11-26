@@ -260,14 +260,20 @@ const ITEMS = [
   { id: "fryer", cat: "Kitchen", name: "T-fal Ultimate EZ Clean deep fryer, 3.5 L",
     price: 104.44, list: 149.99, tracked: true, shop: ["Amazon", A + "B00NQ7QFGM"], tags: [] },
 
-  { id: "cat-tree", cat: "Pets", name: "Feandrea 33.1-inch cat tower",
-    price: 44.73, list: 49.99, tracked: true, shop: ["Amazon", A + "B0795T91YP"], tags: ["Color: light gray"] },
+  { id: "cat-tree", cat: "Pets", name: "Feandrea 66.1-inch large cat tower",
+    price: 59.49, list: 69.99, tracked: true, shop: ["Amazon", A + "B09YLP5F38"], tags: ["Color: light gray"] },
   { id: "cat-harness", cat: "Pets", name: "Voyager Step-In cat harness with leash",
     price: 12.06, list: 13.99, tracked: true, shop: ["Amazon", A + "B0CLVQQ897"], tags: ["Color: black", "Size: S (chest 15 to 18 in)"] },
   { id: "pet-puzzle", cat: "Pets", name: "Nina Ottosson Dog Brick treat puzzle",
     price: 11.02, list: 20.99, tracked: true, shop: ["Amazon", A + "B0711Y9XTF"], tags: [] },
+  { id: "cat-dancer", cat: "Pets", name: "Cat Dancer 101 interactive cat toy",
+    price: 5.99, tracked: true, shop: ["Amazon", A + "B00Y7ZLE0Y"], tags: [] },
+  { id: "dog-kong", cat: "Pets", name: "KONG Extreme dog toy",
+    price: 12.96, tracked: true, shop: ["Amazon", A + "B000GUDZO2"], tags: ["Color: black", "Size: Medium"] },
+  { id: "dog-ball", cat: "Pets", name: "Chuckit! Ultra Ball, 2-pack",
+    price: 4.97, list: 7.99, listLabel: "typical", tracked: true, shop: ["Amazon", A + "B000F4AVPA"], tags: ["Size: Medium (2.5 in)"] },
 ];
-const BASE_DATE = Date.parse("2026-11-26T06:20:00Z");   // when the prices above were read from the shops
+const BASE_DATE = Date.parse("2026-11-26T08:50:00Z");   // when the prices above were read from the shops
 const PRICES_URL = "https://raw.githubusercontent.com/Kimikari/kimis-christmas-list/data/prices.json";
 // The shared "already bought" list: one small public text record, {"<id>": <time it was marked>}.
 const STORE_READ = "https://textdb.online/kimis-xmas-bought-q7w3k9x2";

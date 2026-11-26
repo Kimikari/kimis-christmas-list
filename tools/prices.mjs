@@ -24,9 +24,12 @@ const TRACKED = {
   "sharpener": { asin: "B0CGGVHBQG" },
   "breading-trays": { asin: "B079Q1GT7H" },
   "fryer": { asin: "B00NQ7QFGM" },
-  "cat-tree": { asin: "B0795T91YP" },
+  "cat-tree": { asin: "B09YLP5F38" },
   "cat-harness": { asin: "B0CLVQQ897" },
   "pet-puzzle": { asin: "B0711Y9XTF" },
+  "cat-dancer": { asin: "B00Y7ZLE0Y" },
+  "dog-kong": { asin: "B000GUDZO2" },
+  "dog-ball": { asin: "B000F4AVPA" },
 };
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
