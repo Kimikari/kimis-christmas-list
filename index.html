@@ -133,7 +133,7 @@
   }
   .buy { background: var(--green); color: #fff; text-decoration: none; box-shadow: 0 3px 0 #134533; }
   .buy:active { transform: translateY(3px); box-shadow: none; }
-  .got { background: #fff; color: var(--red); border: 2px dashed var(--red); }
+  .got { background: #fff; color: var(--red); border: 2px dashed var(--red); touch-action: manipulation; }
   .got.ask { background: var(--red); color: #fff; border-style: solid; animation: nudge .5s; }
   .got:disabled { opacity: .6; cursor: progress; }
   @keyframes nudge { 30% { transform: scale(1.04); } }
@@ -296,7 +296,8 @@ const usd = n => "$" + (Number.isInteger(n) ? String(n) : n.toFixed(2));
 const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } };
 const calm = matchMedia("(prefers-reduced-motion: reduce)");
-const say = text => { $("live").textContent = ""; setTimeout(() => { $("live").textContent = text; }, 50); };
+let sayT = 0;
+const say = text => { clearTimeout(sayT); $("live").textContent = ""; sayT = setTimeout(() => { $("live").textContent = text; }, 50); };
 const ago = t => {
   const m = Math.max(0, Math.round((Date.now() - t) / 60000));
   if (m < 1) return "just now";
@@ -313,6 +314,7 @@ let storeOk = null;            // null: not read yet, true/false: the last read 
 let readNo = 0;                // counts reads and saves, so that an older read cannot undo a newer save on screen
 let kimi = lsGet("xmas-kimi") === "1";
 let filterCat = "All", sortBy = "off";
+let kimiAsk = 0, kimiAt = 0;   // the "tap again" question of the Kimi button
 // Where the tracker reads an item's price: the Amazon product number, or the shop's page.
 // A tracked price that was read from another page (an earlier pick under the same id) is not used.
 const srcOf = it => (it.shop[1].startsWith(A) ? it.shop[1].slice(A.length) : it.shop[1]);
@@ -404,89 +406,119 @@ function paintBought(it) {
 
 /* ---------- Bought: the shared list ---------- */
 const pause = ms => new Promise(r => setTimeout(r, ms));
-const timed = (url, opt = {}) => {
+// Fetches a text with one time limit for the whole answer, its body included.
+const timed = async (url, opt = {}) => {
   const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 12000);
-  return fetch(url, { ...opt, signal: ctl.signal }).finally(() => clearTimeout(t));
+  try {
+    const r = await fetch(url, { ...opt, signal: ctl.signal });
+    return { ok: r.ok, status: r.status, text: await r.text() };
+  } finally { clearTimeout(t); }
 };
 // Keeps everything that can be a mark: a short name with a number. Gifts this page does not know are kept too
 // (a newer version of the page may know them), so that saving from an old open tab does not delete them.
 function tidy(raw) {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("not a list");
   const out = {};
-  for (const [k, t] of Object.entries(raw).slice(0, 80))
+  if (Object.keys(raw).length > 200) throw new Error("too long");
+  for (const [k, t] of Object.entries(raw))
     if (k.length <= 40 && typeof t === "number" && Number.isFinite(t) && t !== 0) out[k] = t;
+    else throw new Error("not a mark");   // an error text from the service, for one: not our list
   return out;
 }
 // Throws when the list cannot be read or is not what it should be: a bad read never counts as "nothing is bought".
+// An empty answer is a bad read too: the list always holds text (an undone mark stays in it as a negative time).
 async function readStore() {
   const r = await timed(STORE_READ + "?t=" + Date.now(), { cache: "no-store" });
   if (!r.ok) throw new Error("read " + r.status);
-  const text = (await r.text()).trim();
-  if (!text) { const e = new Error("empty"); e.empty = true; throw e; }
+  const text = r.text.trim();
+  if (!text) throw new Error("empty");
   return tidy(JSON.parse(text));
 }
 async function writeStore(data) {
+  tidy(data);                             // never write what this page would refuse to read
   const body = new URLSearchParams({ key: STORE_KEY, value: JSON.stringify(data) });
   const r = await timed(STORE_WRITE, { method: "POST", body });
   if (!r.ok) throw new Error("write " + r.status);
-  const j = await r.json();
+  const j = JSON.parse(r.text);
   if (!j || j.status !== 1) throw new Error("write refused");
 }
-// Change one gift: read the newest list, change that gift only, write, then read back to see that it stuck.
-async function saveMark(id, value) {
-  let empties = 0;
+// Change one gift: read the newest list, change that gift only, write, then read back twice to see that it stuck
+// (someone saving another gift at the same moment can overwrite it a second later).
+// still(list), when given, is asked on each fresh list whether the change is still wanted (putting a lost mark back).
+// Gives back the list as last read and the time that was written.
+async function saveMark(id, value, still) {
   for (let attempt = 0; attempt < 4; attempt++) {
-    let data;
-    try { data = await readStore(); }
-    catch (e) {
-      if (!e.empty) throw e;
-      if (++empties < 2) { await pause(700); continue; }
-      data = {};                       // the record is really empty: start a new one
+    const data = await readStore();
+    if (still && !still(data)) return { back: data, value };
+    // A tap, and the fresh list says someone already did just that: write nothing, and say so.
+    if (!still && attempt === 0 && (data[id] > 0) === (value > 0) && data[id]) return { back: data, value, same: true };
+    const there = Math.abs(data[id] || 0);
+    if (there > Math.abs(value)) {
+      if (attempt > 0) return { back: data, value };   // someone changed this gift after our write: theirs counts
+      value = Math.sign(value) * (there + 1);          // a tap now is the newest choice, whatever the other clock says
     }
     data[id] = value;
     await writeStore(data);
+    if (!still) { mine[id] = value; lsSet("xmas-mine", JSON.stringify(mine)); }   // ours from now on, even if the check below fails
     await pause(600 + attempt * 600);
-    const back = await readStore();
-    if ((back[id] > 0) === (value > 0)) return back;
+    let back = await readStore();
+    if (back[id] === value) { await pause(2500); back = await readStore(); }
+    if (back[id] === value || Math.abs(back[id] || 0) > Math.abs(value)) return { back, value };
   }
   throw new Error("did not stick");
 }
 // One save at a time on this device.
 let chain = Promise.resolve();
 const queued = job => { const p = chain.then(job); chain = p.catch(() => {}); return p; };
-const took = back => { readNo++; bought = back; storeOk = true; };
+// A newer time in the list is someone's later choice: this device's older mark is over and is never put back.
+function retire(list) {
+  let any = false;
+  for (const id of Object.keys(mine)) if (Math.abs(list[id] || 0) > Math.abs(mine[id])) { delete mine[id]; any = true; }
+  if (any) lsSet("xmas-mine", JSON.stringify(mine));
+}
+const took = back => { readNo++; bought = back; storeOk = true; retire(back); };
 function setMark(id, on) {
-  const value = on ? Date.now() : -Date.now();
   return queued(async () => {
-    const back = await saveMark(id, value);
-    mine[id] = value; lsSet("xmas-mine", JSON.stringify(mine));
-    took(back);
+    const r = await saveMark(id, on ? Date.now() : -Date.now());
+    took(r.back);
+    return r;
   });
 }
 
 async function onGot(it, v) {
   if (v.busy || kimi) return;
   v.msg.textContent = "";
+  if (v.armed && Date.now() - v.armedAt > 8500) { clearTimeout(v.armed); v.armed = 0; }   // the question is too old (the phone slept)
   if (!v.armed) {                       // first tap: ask, and remember what was asked
     v.want = !isBought(it.id);
+    v.armedAt = Date.now();
     v.armed = setTimeout(() => { v.armed = 0; paintBought(it); }, 8000);
     paintBought(it);
     return;
   }
+  if (Date.now() - v.armedAt < 500) return;   // a double tap by accident is not a yes
   clearTimeout(v.armed); v.armed = 0;
-  if (isBought(it.id) === v.want) { paintBought(it); return; }   // someone else did it meanwhile
+  if (isBought(it.id) === v.want) {     // someone else did it meanwhile
+    paintBought(it);
+    v.msg.textContent = v.want ? "Someone else just marked this as bought. If you ordered it too, tell the family." : "Someone else just un-marked this.";
+    return;
+  }
   const on = v.want;
   v.busy = true; paintBought(it);
   try {
-    await setMark(it.id, on);
+    const r = await setMark(it.id, on);
     v.busy = false;
     paintAll();
-    if (on) { celebrate(v.card); say(it.name + " is marked as bought for everyone."); }
+    if (kimi) { /* Kimi mode was turned on meanwhile: show nothing */ }
+    else if (r.same) v.msg.textContent = on ? "Someone else already marked this as bought. If you ordered it too, tell the family." : "Someone else already un-marked this.";
+    else if (isBought(it.id) !== on) v.msg.textContent = "Someone else changed this gift at the same moment. Look at the card and try again if it is wrong.";
+    else if (on) { celebrate(v.card); say(it.name + " is marked as bought for everyone."); }
     else say(it.name + " is no longer marked as bought.");
     setTimeout(refreshBought, 4000);
   } catch {
     v.busy = false; paintBought(it);
-    v.msg.textContent = "Not saved. Check your connection and try again, or tell the family yourself.";
+    const m = v.msg.textContent = kimi ? "" : "Couldn't confirm it saved. Wait a moment: if the card doesn't change, try again, or tell the family yourself.";
+    setTimeout(async () => { await refreshBought(); if (isBought(it.id) === on && v.msg.textContent === m) v.msg.textContent = ""; }, 2500);
   }
 }
 
@@ -495,22 +527,20 @@ async function refreshBought() {
   const no = ++readNo;
   let data;
   try { data = await readStore(); }
-  catch (e) {
-    if (e && e.empty) data = {};        // nobody has marked anything yet
-    else { if (no === readNo) { storeOk = false; paintAll(); } return; }
-  }
+  catch { if (no === readNo) { storeOk = false; paintAll(); } return; }
   if (no !== readNo) return;            // a save or a newer read finished meanwhile
-  bought = data; storeOk = true;
+  bought = data; storeOk = true; retire(data);
   paintAll();
   // Put back a mark of this device that the shared list lost (two people saving at the same moment).
   for (const [id, mark] of Object.entries(mine)) {
     if (!byId.has(id) || typeof mark !== "number") continue;
-    const there = data[id] || 0;
-    if (Math.abs(there) >= Math.abs(mark) || (there > 0) === (mark > 0)) continue;
+    // Lost: the list holds an older time for this gift, or none. A newer time is someone's later choice and stays.
+    const lost = list => mine[id] === mark && Math.abs(list[id] || 0) < Math.abs(mark);
+    if (!lost(data)) continue;
     const n = putBack.get(id) || 0;
     if (n >= 3) continue;
     putBack.set(id, n + 1);
-    queued(() => saveMark(id, mark)).then(back => { took(back); paintAll(); }, () => {});
+    queued(() => saveMark(id, mark, lost)).then(r => { took(r.back); paintAll(); }, () => {});
   }
 }
 
@@ -522,7 +552,7 @@ async function refreshPrices() {
   try {
     const r = await timed(PRICES_URL + "?t=" + Math.floor(Date.now() / 240000), { cache: "no-cache" });
     if (!r.ok) throw new Error(r.status);
-    const data = await r.json();
+    const data = JSON.parse(r.text);
     const soon = Date.now() + 600000;   // a time in the future is not believed
     for (const [id, p] of Object.entries((data && data.items) || {})) {
       const it = byId.get(id);
@@ -570,7 +600,8 @@ function reorder() {
 let sortedOnce = false;
 function paintAll() {
   for (const it of ITEMS) { paintPrice(it); paintBought(it); }
-  if (!sortedOnce && storeOk === true) { sortedOnce = true; reorder(); }
+  // Sorted once, at the first answer. If that one failed, the cards stay where they are: no jump under a finger later.
+  if (!sortedOnce && storeOk !== null) { sortedOnce = true; if (storeOk) reorder(); }
   let any = false;
   for (const it of ITEMS) {
     const c = view.get(it.id).card;
@@ -594,6 +625,8 @@ function paintAll() {
   else if (storeOk === false) $("bannerText").textContent = "Can't reach the shared list right now, so this page can't show what is already bought. Ask before you buy.";
   else banner.hidden = true;
   $("kimiBtn").setAttribute("aria-pressed", String(kimi));
+  $("kimiBtn").textContent = kimi ? "🙈 Kimi mode is ON: tap to show what's bought"
+    : kimiAsk ? "Only Kimi! Tap again to hide what's bought on this device" : "🙈 I'm Kimi: hide what's bought";
   $("sub").hidden = kimi;
 
   const when = t => new Date(t).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
@@ -631,7 +664,21 @@ $("santa").addEventListener("click", () => {
   setTimeout(() => c.classList.remove("picked"), 3000);
   say("Santa picked: " + it.name + ", " + usd(total(it)));
 });
-$("kimiBtn").addEventListener("click", () => { kimi = !kimi; lsSet("xmas-kimi", kimi ? "1" : "0"); reorder(); paintAll(); });
+$("kimiBtn").addEventListener("click", () => {
+  if (!kimi && !kimiAsk) {              // turning it on takes two taps: with it on, a gift can be bought twice
+    kimiAt = Date.now();
+    kimiAsk = setTimeout(() => { kimiAsk = 0; paintAll(); }, 6000);
+    paintAll();
+    return;
+  }
+  if (!kimi && Date.now() - kimiAt < 500) return;
+  clearTimeout(kimiAsk); kimiAsk = 0;
+  kimi = !kimi;
+  if (kimi) {                           // leave nothing on screen that tells what was bought
+    clearTimeout(sayT); $("live").textContent = "";
+    for (const v of view.values()) { v.msg.textContent = ""; clearTimeout(v.armed); v.armed = 0; }
+  }
+  lsSet("xmas-kimi", kimi ? "1" : "0"); reorder(); paintAll(); });
 
 /* ---------- Fun ---------- */
 function burst(x, y, icons, n) {
@@ -730,6 +777,7 @@ refreshBought(); refreshPrices();
 setInterval(refreshBought, 45000);
 setInterval(refreshPrices, 5 * 60000);
 setInterval(() => { if (!document.hidden) { paintCount(); for (const it of ITEMS) paintPrice(it); } }, 60000);
+addEventListener("pageshow", e => { if (e.persisted) { refreshBought(); refreshPrices(); } });   // back from the shop
 document.addEventListener("visibilitychange", () => { runSnow(); if (!document.hidden) { refreshBought(); refreshPrices(); paintCount(); } });
 </script>
 </body>
