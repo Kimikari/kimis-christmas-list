@@ -228,6 +228,8 @@ const ITEMS = [
     price: 66.75, list: 89, listLabel: "noprime", prime: true, tracked: true, shop: ["Amazon", A + "B00EINBSEW"], tags: [] },
   { id: "body-pillow", cat: "Sleep", name: "Sleep Number Cool ComfortFit Body Pillow",
     price: 119.99, tracked: true, shop: ["Sleep Number", "https://www.sleepnumber.com/products/cool-comfortfit-body-pillow"], tags: [] },
+  { id: "heated-throw", cat: "Sleep", name: "WOOMER reversible faux fur and sherpa heated throw, 50 x 60 in",
+    price: 42.49, list: 59.99, listLabel: "noprime", prime: true, tracked: true, shop: ["Amazon", A + "B0CZRJ7CNY"], tags: ["Color: Marble Grey", "Size: throw, 50 x 60 in"] },
 
   { id: "headset", cat: "Gaming", name: "Razer BlackShark V2 Pro wireless headset (2023)",
     price: 80.59, list: 199.99, tracked: true, shop: ["Amazon", A + "B0BY1FXC9N"], tags: ["Color: black"] },
@@ -236,6 +238,8 @@ const ITEMS = [
 
   { id: "boots", cat: "Winter", name: "Kamik Nation Plus snow boots, men's",
     price: 103.99, list: 129.99, tracked: true, shop: ["Amazon", A + "B0G4F2XKCR"], tags: ["Color: black", "Size: 11 (estimate)", "Runs small, no half sizes"] },
+  { id: "cleats", cat: "Winter", name: "Yaktrax Diamond Grip ice cleats",
+    price: 43.44, list: 59.99, tracked: true, shop: ["Amazon", A + "B01BZHFB7S"], tags: ["Size: X-Large (estimate, to fit over size 11 snow boots)"] },
   { id: "coat", cat: "Winter", name: "Columbia Landroamer II parka, men's",
     price: 179.99, list: 240, tracked: true, shop: ["Amazon", A + "B0CLR9F8TF"], tags: ["Color: black", "Size: Large (estimate)"] },
   { id: "gloves", cat: "Winter", name: "The North Face Montana Ski Gloves, men's",
@@ -250,6 +254,11 @@ const ITEMS = [
     price: 30.35, list: 37.95, tracked: true, shop: ["Amazon", A + "B088856W2V"], tags: ["Color: Black Twill", "Size: 34W x 30L (estimate)"] },
   { id: "socks", cat: "Winter", name: "Darn Tough Light Hiker Micro Crew socks, men's merino",
     price: 25, tracked: true, shop: ["Darn Tough", "https://darntough.com/products/mens-merino-wool-light-hiker-micro-crew-cushioned-lightweight-hiking-socks"], tags: ["Color: black", "Size: L (estimate)", "Price is per pair"] },
+
+  { id: "wallet", cat: "Everyday", name: "Minor History The Snaps Keychain Wallet",
+    price: 36, list: 48, approx: true, shop: ["Minor History", "https://www.minorhistory.com/products/snaps-keychain-wallet?variant=31986093981805"], tags: ["Color: black", "Sale items can't be returned"] },
+  { id: "toiletry-bag", cat: "Everyday", name: "Osprey Daylite Toiletry Kit",
+    price: 19.99, tracked: true, shop: ["Amazon", A + "B0BKQGKNZ9"], tags: ["Color: black"] },
 
   { id: "towels", cat: "Kitchen", name: "All-Clad Professional Cotton Terry Kitchen Towel, 1 piece",
     price: 11.99, tracked: true, shop: ["Amazon", A + "B00UABQ5J4"], tags: ["Color: black", "Just one"] },
@@ -595,7 +604,7 @@ function paintAll() {
 
 /* ---------- Controls ---------- */
 const CATS = ["All", ...new Set(ITEMS.map(it => it.cat))];
-const CAT_ICON = { All: "🎁", Sleep: "😴", Gaming: "🎮", Winter: "❄️", Kitchen: "🍳", Pets: "🐾" };
+const CAT_ICON = { All: "🎁", Sleep: "😴", Gaming: "🎮", Winter: "❄️", Everyday: "🔑", Kitchen: "🍳", Pets: "🐾" };
 for (const cat of CATS) {
   const b = el("button", null, (CAT_ICON[cat] || "") + " " + cat);
   b.type = "button";
