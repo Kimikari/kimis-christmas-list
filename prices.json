@@ -1,7 +1,7 @@
 {
- "checkedAt": "2026-11-27T23:10:40.962Z",
- "ok": 25,
- "failed": 2,
+ "checkedAt": "2026-11-27T23:23:25.966Z",
+ "ok": 28,
+ "failed": 0,
  "items": {
   "side-pillow": {
    "price": 66.75,
@@ -10,15 +10,26 @@
    "list": 89,
    "listLabel": "noprime",
    "src": "B00EINBSEW",
-   "at": "2026-11-27T23:08:55.975Z"
+   "at": "2026-11-27T23:21:09.145Z"
+  },
+  "body-pillow": {
+   "price": 119.99,
+   "src": "https://www.sleepnumber.com/products/cool-comfortfit-body-pillow",
+   "at": "2026-11-27T23:21:11.469Z"
+  },
+  "heated-throw": {
+   "price": 59.99,
+   "via": "new",
+   "src": "B0CZRJ7CNY",
+   "at": "2026-11-27T23:21:15.455Z"
   },
   "headset": {
-   "price": 92.8,
+   "price": 63.99,
    "via": "new+shown",
-   "list": 199.99,
+   "list": 79.99,
    "listLabel": "list",
-   "src": "B0BY1FXC9N",
-   "at": "2026-11-27T23:09:07.710Z"
+   "src": "B0G12HGD6R",
+   "at": "2026-11-27T23:21:20.064Z"
   },
   "mic": {
    "price": 44.99,
@@ -26,7 +37,7 @@
    "list": 56.99,
    "listLabel": "list",
    "src": "B0BMFQP2ZZ",
-   "at": "2026-11-27T23:09:11.974Z"
+   "at": "2026-11-27T23:21:24.578Z"
   },
   "boots": {
    "price": 103.99,
@@ -34,110 +45,7 @@
    "list": 129.99,
    "listLabel": "list",
    "src": "B0G4F2XKCR",
-   "at": "2026-11-27T23:09:15.909Z"
-  },
-  "hat": {
-   "price": 19.99,
-   "via": "new+shown",
-   "src": "B002G9UDYG",
-   "at": "2026-11-27T23:09:32.052Z"
-  },
-  "face-mask": {
-   "price": 30,
-   "via": "new+shown",
-   "src": "B0848XF4TC",
-   "at": "2026-11-27T23:09:36.174Z"
-  },
-  "towels": {
-   "price": 11.99,
-   "via": "new+shown",
-   "src": "B00UABQ5J4",
-   "at": "2026-11-27T23:09:49.914Z"
-  },
-  "sharpener": {
-   "price": 90.3,
-   "via": "new+shown",
-   "list": 129,
-   "listLabel": "typical",
-   "src": "B0CGGVHBQG",
-   "at": "2026-11-27T23:09:54.329Z"
-  },
-  "breading-trays": {
-   "price": 7.49,
-   "via": "new+shown",
-   "list": 10,
-   "listLabel": "list",
-   "src": "B079Q1GT7H",
-   "at": "2026-11-27T23:09:58.212Z"
-  },
-  "fryer": {
-   "price": 104.44,
-   "via": "new+shown",
-   "list": 149.99,
-   "listLabel": "list",
-   "src": "B00NQ7QFGM",
-   "at": "2026-11-27T23:10:02.525Z"
-  },
-  "cat-tree": {
-   "price": 59.49,
-   "via": "new+shown",
-   "list": 69.99,
-   "listLabel": "list",
-   "src": "B09YLP5F38",
-   "at": "2026-11-27T23:10:27.130Z"
-  },
-  "cat-harness": {
-   "price": 13.99,
-   "via": "new+shown",
-   "src": "B0CLVQQ897",
-   "at": "2026-11-27T23:10:31.566Z"
-  },
-  "pet-puzzle": {
-   "price": 11.02,
-   "via": "new+shown",
-   "list": 20.99,
-   "listLabel": "list",
-   "src": "B0711Y9XTF",
-   "at": "2026-11-27T22:39:55.719Z"
-  },
-  "coat": {
-   "price": 180,
-   "via": "new+shown",
-   "list": 240,
-   "listLabel": "list",
-   "src": "B0CLR9F8TF",
-   "at": "2026-11-27T23:09:24.167Z"
-  },
-  "gloves": {
-   "price": 70,
-   "via": "new+shown",
-   "src": "B0FXVXMW5Z",
-   "at": "2026-11-27T23:09:28.457Z"
-  },
-  "lined-pants": {
-   "price": 30.35,
-   "via": "new+shown",
-   "list": 37.95,
-   "listLabel": "list",
-   "src": "B088856W2V",
-   "at": "2026-11-27T23:09:40.475Z"
-  },
-  "socks": {
-   "price": 25,
-   "src": "https://darntough.com/products/mens-merino-wool-light-hiker-micro-crew-cushioned-lightweight-hiking-socks",
-   "at": "2026-11-27T23:09:43.256Z"
-  },
-  "dog-egg": {
-   "price": 13.99,
-   "via": "new+shown",
-   "src": "B005AFHOZE",
-   "at": "2026-11-27T23:10:38.863Z"
-  },
-  "heated-throw": {
-   "price": 59.99,
-   "via": "new",
-   "src": "B0CZRJ7CNY",
-   "at": "2026-11-27T23:09:02.855Z"
+   "at": "2026-11-27T23:21:29.528Z"
   },
   "cleats": {
    "price": 43.44,
@@ -145,25 +53,100 @@
    "list": 59.99,
    "listLabel": "list",
    "src": "B01BZHFB7S",
-   "at": "2026-11-27T23:09:20.007Z"
+   "at": "2026-11-27T23:21:35.111Z"
+  },
+  "coat": {
+   "price": 180,
+   "via": "new+shown",
+   "list": 240,
+   "listLabel": "list",
+   "src": "B0CLR9F8TF",
+   "at": "2026-11-27T23:21:40.267Z"
+  },
+  "gloves": {
+   "price": 70,
+   "via": "new+shown",
+   "src": "B0FXVXMW5Z",
+   "at": "2026-11-27T23:21:44.766Z"
+  },
+  "hat": {
+   "price": 19.99,
+   "via": "new+shown",
+   "src": "B002G9UDYG",
+   "at": "2026-11-27T23:21:49.064Z"
+  },
+  "face-mask": {
+   "price": 30,
+   "via": "new+shown",
+   "src": "B0848XF4TC",
+   "at": "2026-11-27T23:21:54.035Z"
+  },
+  "lined-pants": {
+   "price": 30.35,
+   "via": "new+shown",
+   "list": 37.95,
+   "listLabel": "list",
+   "src": "B088856W2V",
+   "at": "2026-11-27T23:21:59.670Z"
+  },
+  "socks": {
+   "price": 25,
+   "src": "https://darntough.com/products/mens-merino-wool-light-hiker-micro-crew-cushioned-lightweight-hiking-socks",
+   "at": "2026-11-27T23:22:02.851Z"
   },
   "toiletry-bag": {
    "price": 19.99,
    "via": "new+shown",
    "src": "B0BKQGKNZ9",
-   "at": "2026-11-27T23:09:47.029Z"
+   "at": "2026-11-27T23:22:08.828Z"
+  },
+  "towels": {
+   "price": 11.99,
+   "via": "new+shown",
+   "src": "B00UABQ5J4",
+   "at": "2026-11-27T23:22:13.354Z"
+  },
+  "sharpener": {
+   "price": 40.5,
+   "via": "new+shown",
+   "src": "B002JIMVS0",
+   "at": "2026-11-27T23:22:19.064Z"
+  },
+  "breading-trays": {
+   "price": 7.49,
+   "via": "new+shown",
+   "list": 10,
+   "listLabel": "list",
+   "src": "B079Q1GT7H",
+   "at": "2026-11-27T23:22:23.310Z"
+  },
+  "fryer": {
+   "price": 117.42,
+   "via": "new+shown",
+   "list": 129.95,
+   "listLabel": "list",
+   "src": "B01JCECNM2",
+   "at": "2026-11-27T23:22:29.107Z"
+  },
+  "blender": {
+   "price": 79.95,
+   "via": "new+shown",
+   "list": 109.95,
+   "listLabel": "list",
+   "src": "B085FRKBMF",
+   "at": "2026-11-27T23:22:33.193Z"
   },
   "knife-chef": {
    "price": 159.95,
    "via": "new+shown",
    "src": "B000N5H2XU",
-   "at": "2026-11-27T23:10:06.520Z"
+   "at": "2026-11-27T23:22:38.819Z"
   },
   "knife-paring": {
    "price": 8,
    "via": "new+shown",
    "src": "B0061SWLKW",
-   "at": "2026-11-27T23:10:11.204Z"
+   "at": "2026-11-27T23:22:44.017Z"
   },
   "scale": {
    "price": 25,
@@ -171,20 +154,51 @@
    "list": 26.95,
    "listLabel": "list",
    "src": "B0007GAWSC",
-   "at": "2026-11-27T23:10:15.141Z"
+   "at": "2026-11-27T23:22:49.210Z"
   },
   "pan-thermometer": {
-   "price": 21.24,
+   "price": 27.07,
    "via": "new+shown",
-   "list": 24.99,
+   "list": 35.99,
    "listLabel": "list",
-   "src": "B00DMI632G",
-   "at": "2026-11-27T23:10:19.689Z"
+   "src": "B09Q8MPNWG",
+   "at": "2026-11-27T23:22:55.322Z"
   },
   "steak-weight": {
-   "price": 27,
-   "src": "https://www.thechefspress.com/shop/p/13-oz-chefs-press",
-   "at": "2026-11-27T23:10:22.654Z"
+   "price": 22.9,
+   "via": "new+shown",
+   "list": 24.99,
+   "listLabel": "typical",
+   "src": "B00063RXNI",
+   "at": "2026-11-27T23:23:00.696Z"
+  },
+  "cat-tree": {
+   "price": 59.49,
+   "via": "new+shown",
+   "list": 69.99,
+   "listLabel": "list",
+   "src": "B09YLP5F38",
+   "at": "2026-11-27T23:23:06.846Z"
+  },
+  "cat-harness": {
+   "price": 13.99,
+   "via": "new+shown",
+   "src": "B0CLVQQ897",
+   "at": "2026-11-27T23:23:12.669Z"
+  },
+  "pet-puzzle": {
+   "price": 11.02,
+   "via": "new+shown",
+   "list": 20.99,
+   "listLabel": "list",
+   "src": "B0711Y9XTF",
+   "at": "2026-11-27T23:23:17.387Z"
+  },
+  "dog-egg": {
+   "price": 13.99,
+   "via": "new+shown",
+   "src": "B005AFHOZE",
+   "at": "2026-11-27T23:23:23.463Z"
   }
  }
 }
