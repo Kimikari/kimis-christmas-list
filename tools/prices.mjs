@@ -29,7 +29,6 @@ const TRACKED = {
   "fryer": { asin: "B00NQ7QFGM" },
   "knife-chef": { asin: "B000N5H2XU" },
   "knife-paring": { asin: "B0061SWLKW" },
-  "knife-bread": { asin: "B000PS1HS6" },
   "scale": { asin: "B0007GAWSC" },
   "pan-thermometer": { asin: "B00DMI632G" },
   "steak-weight": { url: "https://www.thechefspress.com/shop/p/13-oz-chefs-press" },
