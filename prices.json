@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-26T23:03:16.277Z",
+ "checkedAt": "2026-11-27T05:07:16.520Z",
  "ok": 21,
  "failed": 1,
  "items": {
@@ -10,7 +10,7 @@
    "list": 89,
    "listLabel": "noprime",
    "src": "B00EINBSEW",
-   "at": "2026-11-26T23:01:53.295Z"
+   "at": "2026-11-27T05:05:55.644Z"
   },
   "headset": {
    "price": 80.59,
@@ -18,7 +18,7 @@
    "list": 199.99,
    "listLabel": "list",
    "src": "B0BY1FXC9N",
-   "at": "2026-11-26T23:02:05.069Z"
+   "at": "2026-11-27T05:06:06.059Z"
   },
   "mic": {
    "price": 44.99,
@@ -26,7 +26,7 @@
    "list": 56.99,
    "listLabel": "list",
    "src": "B0BMFQP2ZZ",
-   "at": "2026-11-26T23:02:09.243Z"
+   "at": "2026-11-27T05:06:09.527Z"
   },
   "boots": {
    "price": 103.99,
@@ -34,27 +34,27 @@
    "list": 129.99,
    "listLabel": "list",
    "src": "B0G4F2XKCR",
-   "at": "2026-11-26T23:02:13.585Z"
+   "at": "2026-11-27T05:06:14.191Z"
   },
   "hat": {
    "price": 19.99,
    "via": "new+shown",
    "src": "B002G9UDYG",
-   "at": "2026-11-26T23:02:30.344Z"
+   "at": "2026-11-27T05:06:29.663Z"
   },
   "face-mask": {
-   "price": 24,
+   "price": 27,
    "via": "new+shown",
    "list": 30,
    "listLabel": "list",
    "src": "B0848XF4TC",
-   "at": "2026-11-26T23:02:33.167Z"
+   "at": "2026-11-27T05:06:32.868Z"
   },
   "towels": {
    "price": 11.99,
    "via": "new+shown",
    "src": "B00UABQ5J4",
-   "at": "2026-11-26T23:02:46.347Z"
+   "at": "2026-11-27T05:06:48.258Z"
   },
   "sharpener": {
    "price": 96.75,
@@ -62,7 +62,7 @@
    "list": 129,
    "listLabel": "typical",
    "src": "B0CGGVHBQG",
-   "at": "2026-11-26T23:02:50.015Z"
+   "at": "2026-11-27T05:06:51.727Z"
   },
   "breading-trays": {
    "price": 7.49,
@@ -70,7 +70,7 @@
    "list": 10,
    "listLabel": "list",
    "src": "B079Q1GT7H",
-   "at": "2026-11-26T23:02:54.197Z"
+   "at": "2026-11-27T05:06:56.228Z"
   },
   "fryer": {
    "price": 104.44,
@@ -78,7 +78,7 @@
    "list": 149.99,
    "listLabel": "list",
    "src": "B00NQ7QFGM",
-   "at": "2026-11-26T23:02:58.224Z"
+   "at": "2026-11-27T05:06:59.906Z"
   },
   "cat-tree": {
    "price": 59.49,
@@ -86,7 +86,7 @@
    "list": 69.99,
    "listLabel": "list",
    "src": "B09YLP5F38",
-   "at": "2026-11-26T23:03:01.267Z"
+   "at": "2026-11-27T05:07:02.954Z"
   },
   "cat-harness": {
    "price": 13.18,
@@ -94,7 +94,7 @@
    "list": 13.99,
    "listLabel": "list",
    "src": "B0CLVQQ897",
-   "at": "2026-11-26T23:03:05.020Z"
+   "at": "2026-11-27T05:07:05.902Z"
   },
   "pet-puzzle": {
    "price": 11.02,
@@ -102,7 +102,7 @@
    "list": 20.99,
    "listLabel": "list",
    "src": "B0711Y9XTF",
-   "at": "2026-11-26T23:03:09.566Z"
+   "at": "2026-11-27T05:07:09.769Z"
   },
   "coat": {
    "price": 179.99,
@@ -110,13 +110,13 @@
    "list": 240,
    "listLabel": "list",
    "src": "B0CLR9F8TF",
-   "at": "2026-11-26T23:02:22.839Z"
+   "at": "2026-11-27T05:06:22.314Z"
   },
   "gloves": {
    "price": 70,
    "via": "new+shown",
    "src": "B0FXVXMW5Z",
-   "at": "2026-11-26T23:02:26.710Z"
+   "at": "2026-11-27T05:06:25.900Z"
   },
   "lined-pants": {
    "price": 30.35,
@@ -124,18 +124,18 @@
    "list": 37.95,
    "listLabel": "list",
    "src": "B088856W2V",
-   "at": "2026-11-26T23:02:35.861Z"
+   "at": "2026-11-27T05:06:37.288Z"
   },
   "socks": {
    "price": 25,
    "src": "https://darntough.com/products/mens-merino-wool-light-hiker-micro-crew-cushioned-lightweight-hiking-socks",
-   "at": "2026-11-26T23:02:39.146Z"
+   "at": "2026-11-27T05:06:40.841Z"
   },
   "dog-egg": {
    "price": 13.99,
    "via": "new+shown",
    "src": "B005AFHOZE",
-   "at": "2026-11-26T23:03:13.686Z"
+   "at": "2026-11-27T05:07:14.419Z"
   },
   "heated-throw": {
    "price": 42.49,
@@ -144,7 +144,7 @@
    "list": 59.99,
    "listLabel": "noprime",
    "src": "B0CZRJ7CNY",
-   "at": "2026-11-26T23:02:00.979Z"
+   "at": "2026-11-27T05:06:00.988Z"
   },
   "cleats": {
    "price": 43.44,
@@ -152,13 +152,13 @@
    "list": 59.99,
    "listLabel": "list",
    "src": "B01BZHFB7S",
-   "at": "2026-11-26T23:02:18.228Z"
+   "at": "2026-11-27T05:06:19.086Z"
   },
   "toiletry-bag": {
    "price": 19.99,
    "via": "new+shown",
    "src": "B0BKQGKNZ9",
-   "at": "2026-11-26T23:02:42.266Z"
+   "at": "2026-11-27T05:06:44.228Z"
   }
  }
 }
