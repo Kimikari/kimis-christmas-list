@@ -1,0 +1,56 @@
+Kimi's Christmas List: who wrote what
+======================================
+
+COPIED, UNCHANGED, FROM PEOPLE (folder lib/)
+
+Each file is the published release, byte for byte. All four were published before GitHub Copilot's
+first preview (29 June 2021), which is why these versions were chosen. The SHA-256 lets anyone compare
+a file here with the one at its source.
+
+1. Bootstrap 5.0.0: all the styles of the page (colors, cards, buttons, badges, grid, progress bar)
+   By the Bootstrap Authors (started by Mark Otto and Jacob Thornton). Published 5 May 2021.
+   Licence: MIT, see lib/bootstrap-LICENSE.txt
+   File:    lib/bootstrap.min.css
+   Source:  https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css
+   Date:    https://blog.getbootstrap.com/2021/05/05/bootstrap-5/
+   SHA-256: 04083fcecdd9e19b2acd1e0073437aa07c98d230f0198d7f1fd470ab220fef64
+
+2. Snowstorm 1.44.20131208: the snow
+   By Scott Schiller. Committed 8 December 2013.
+   Licence: BSD, see lib/snowstorm-license.txt
+   File:    lib/snowstorm.js
+   Source:  https://github.com/scottschiller/Snowstorm/blob/494bbcf87f4843a74cc715f3729674ad4b126c5a/snowstorm.js
+   SHA-256: c28668ba62dcce06c264752420b3687154c329cb322604edcbb0f147f53ef531
+
+3. countdown.js 2.6.0: the countdown to Christmas
+   By Stephen M. McKamey. Published 11 July 2015.
+   Licence: MIT, see lib/countdown-LICENSE.txt
+   File:    lib/countdown.js
+   Source:  https://unpkg.com/countdown@2.6.0/countdown.js
+   SHA-256: f3eeffefe3e221388e337f1a551f883b25a293518c00cd4c886ebcb13ec1895d
+
+4. canvas-confetti 1.3.2: the confetti
+   By Kiril Vatev. Published 12 November 2020.
+   Licence: ISC, see lib/confetti-LICENSE.txt
+   File:    lib/confetti.browser.js
+   Source:  https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.2/dist/confetti.browser.js
+   SHA-256: b3617dd78dc99e6bb7ec65e8b36b9441a13871a51d9efcf0c6276ea2b3b9523e
+
+What this shows and what it cannot: a release date before Copilot, a named author and an unchanged
+file are good evidence that people wrote the code. Simpler code-completion tools existed earlier, and
+nobody can prove how any code was typed.
+
+NOT COPIED: WRITTEN BY AN AI ASSISTANT
+
+- index.html: the page's structure and its words. It has no style sheet of its own; it only uses
+  Bootstrap's class names, so which Bootstrap parts go where was still chosen by the assistant.
+- app.js, all of it: the gift list, how a card is put together, the filter, budget and sort, the
+  "I bought this" button and its shared list, the loading of the tracked prices, and the lines that
+  switch the libraries above on (their settings, the confetti colors).
+- tools/prices.mjs and .github/workflows/prices.yml: the hourly price tracker.
+
+These parts are specific to this list.
+
+PHOTOS
+
+The product photos in img/ are the shops' and makers' own pictures of their products.

@@ -1,0 +1,2 @@
+# The files in lib/ are other people's releases, kept byte for byte: no line-ending changes.
+lib/* -text
