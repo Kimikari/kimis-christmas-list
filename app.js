@@ -1,9 +1,12 @@
-/* Kimi's Christmas List: the part of the site that no library has.
-   This file was written by an AI assistant (Genos), not copied from anyone: the gift list, the "I bought this"
-   button with its shared list, and the loading of the tracked prices.
-   It also builds each card and wires up the filter, the sort and the libraries.
-   The styles (colors, cards, buttons, grid) are Bootstrap's; snow, countdown and confetti are libraries
-   written by people. They are in lib/, unchanged; CREDITS.txt says who wrote each and where it came from. */
+/* Kimi's Christmas List: the code that is specific to this site.
+   This file was written by an AI assistant (Genos), not copied from anyone: the gift list, the rules of the
+   filter and the sort, the "I bought this" button with its shared list, the loading and showing of the tracked
+   prices, and the lines that switch the libraries on.
+   What it hands to code written by people (lib/, unchanged; CREDITS.txt says who wrote each):
+   List.js copies the card template in index.html once per gift and fills in the name, the category and the shop,
+   and it carries out the filter and the sort by the rules given here (prices, photos and the bought state are
+   this file's work); Bootstrap has the styles, the category buttons and the menu; Snowstorm, countdown.js
+   and canvas-confetti do the snow, the countdown and the confetti. */
 "use strict";
 /* ---------- The list ----------
    id: never change one (it ties a gift to its price and to its "bought" mark).
@@ -132,47 +135,34 @@ const pctOff = it => { const l = totalList(it); return l ? Math.round((1 - total
 const isBought = id => !kimi && bought[id] > 0;
 
 /* ---------- Cards ----------
-   A card is Bootstrap's card component; every class name below is Bootstrap's own, except the plain
-   hooks "buy", "got", "msg", "wrapped" and "bought", which carry no style. */
-function makeCard(it) {
-  const col = el("div", "col");
-  const c = el("article", "card h-100 shadow");
-  const photo = el("div", "ratio ratio-4x3 border-bottom");
-  const box = el("div", "d-flex align-items-center justify-content-center p-3 bg-white rounded-top");
-  const img = el("img", "mw-100 mh-100");
-  img.alt = ""; img.loading = "lazy"; img.decoding = "async";
+   List.js (lib/list.min.js, by Jonny Strömberg) makes one card per gift: a copy of the card template in
+   index.html (id "card-tpl"), with the name, the category, the shop's name and the shop's link filled in. It also puts the
+   cards in order and takes the filtered ones out of the page. The names it fills in are this page's own
+   texts from ITEMS, never text from the network (List.js writes them as HTML).
+   The class names that are not Bootstrap's ("name", "buy", "got", "msg", ...) are plain hooks without a style. */
+const list = new List("gifts", {
+  item: "card-tpl",
+  valueNames: ["name", "cat", "shopname", { name: "buy", attr: "href" }, { data: ["id"] }],
+}, ITEMS.map((it, i) => ({ id: it.id, i, name: it.name, cat: it.cat, shopname: it.shop[0], buy: it.shop[1] })));
+const itemOf = li => byId.get(li.values().id);
+// The rest of a card is specific to this list: its photo, its size and color notes, and the parts that change.
+function wire(li) {
+  const it = itemOf(li), col = li.elm, q = c => col.querySelector("." + c);
+  const img = q("photo").querySelector("img"), box = img.parentNode;
   img.addEventListener("error", () => { box.textContent = "🎁"; box.classList.add("fs-1"); });
   img.src = "img/" + it.id + ".jpg";
-  box.append(img); photo.append(box);
-  const off = el("span", "badge bg-danger fs-6 position-absolute top-0 end-0 m-2");
-  const body = el("div", "card-body d-flex flex-column");
-  const cat = el("div", null, it.cat);
-  const wrapped = el("p", "wrapped fw-bold text-center my-2", "🎁 Already bought");
-  const prices = el("div", "mb-1");
-  const now = el("span", "fs-4 fw-bold text-danger me-2"), was = el("span", "small text-muted me-2");
-  const save = el("span", "badge rounded-pill bg-success me-1"), prime = el("span", "badge rounded-pill bg-warning text-dark", "needs Prime");
-  prices.append(now, was, save, prime);
-  const fresh = el("p", "small text-muted mb-2");
-  const tags = el("ul", "list-group list-group-flush small mb-3");
+  const tags = q("tags");
   for (const t of it.tags) tags.append(el("li", "list-group-item px-0 py-1", t));
-  const acts = el("div", "d-grid gap-2 mt-auto");
-  const buy = el("a", "buy btn btn-success", "Buy at " + it.shop[0] + " ↗");
-  buy.href = it.shop[1]; buy.target = "_blank"; buy.rel = "noopener noreferrer";
-  const got = el("button"); got.type = "button";
-  const msg = el("p"); msg.setAttribute("role", "alert");
-  acts.append(buy, got, msg);
-  body.append(cat, el("h2", "card-title h6 fw-bold", it.name), wrapped, prices, fresh);
-  if (it.tags.length) body.append(tags);
-  body.append(acts);
-  c.append(photo, off, body);
-  col.append(c);
+  if (!it.tags.length) tags.remove();
   // shop: the parts that are only shown while the gift can still be bought
-  const v = { col, card: c, off, cat, wrapped, now, was, save, prime, fresh, got, msg, shop: [photo, prices, fresh, tags, buy], armed: 0, want: false, busy: false };
-  got.addEventListener("click", () => onGot(it, v));
+  const v = { col, card: q("card"), off: q("off"), cat: q("cat"), wrapped: q("wrapped"), now: q("now"), was: q("was"), wasnum: q("wasnum"),
+    waslabel: q("waslabel"), save: q("save"), prime: q("prime"), fresh: q("fresh"), got: q("got"), msg: q("msg"),
+    shop: [q("photo"), q("prices"), q("fresh"), tags, q("buy")], armed: 0, want: false, busy: false };
+  v.got.addEventListener("click", () => onGot(it, v));
   view.set(it.id, v);
   paintPrice(it); paintBought(it);
-  return col;
 }
+list.on("updated", l => { $("empty").hidden = l.visibleItems.length > 0; });
 
 function paintPrice(it) {
   const v = view.get(it.id), l = totalList(it), p = pctOff(it), ap = it.approx ? "≈" : "";
@@ -181,8 +171,8 @@ function paintPrice(it) {
   v.off.textContent = "-" + p + "%";
   v.was.hidden = v.save.hidden = !l;
   if (l) {
-    v.was.textContent = "";
-    v.was.append(el("s", null, usd(l)), " " + (it.listLabel === "typical" ? "typical price" : it.listLabel === "noprime" ? "without Prime" : "list price"));
+    v.wasnum.textContent = usd(l);
+    v.waslabel.textContent = it.listLabel === "typical" ? "typical price" : it.listLabel === "noprime" ? "without Prime" : "list price";
     v.save.textContent = "save " + ap + usd(round2(l - total(it)));
   }
   v.prime.hidden = !it.prime;
@@ -199,7 +189,7 @@ function paintBought(it) {
   for (const n of v.shop) n.hidden = b;
   v.off.hidden = b || !(pctOff(it) >= 5);
   v.wrapped.hidden = !b;
-  v.cat.className = "small text-uppercase " + (b ? "text-white" : "text-muted");
+  v.cat.classList.toggle("text-white", b); v.cat.classList.toggle("text-muted", !b);
   v.msg.className = "msg small mb-0 " + (b ? "text-white" : "text-danger");
   v.got.hidden = kimi;
   v.got.className = "got btn " + (b ? (ask ? "btn-warning" : "btn-light") : (ask ? "btn-danger" : "btn-outline-danger"));
@@ -385,35 +375,31 @@ function shown(it) {
   const max = Number($("budget").value);
   return max >= Number($("budget").max) || total(it) <= max;
 }
-// Puts the cards in order, bought ones last. Only called on load and when the visitor changes the order,
-// never by a background refresh: a card must not move under a finger.
+// Filters the cards and puts them in order, bought ones last: List.js does both, by the rules given here.
+// List.js takes every card out of the page and puts it back, so this is only called on load and when the
+// visitor changes the category, the budget or the order, never by a background refresh: a card must not move
+// under a finger. So a gift whose tracked price rises above the chosen budget stays until the next such change.
 function reorder() {
-  const order = ITEMS.map((it, i) => ({ it, i })).sort((a, b) => {
-    const d = isBought(a.it.id) - isBought(b.it.id);
-    if (d) return d;
-    if (sortBy === "off") return pctOff(b.it) - pctOff(a.it) || a.i - b.i;
-    if (sortBy === "low") return total(a.it) - total(b.it) || a.i - b.i;
-    if (sortBy === "high") return total(b.it) - total(a.it) || a.i - b.i;
-    return a.i - b.i;
-  });
-  const grid = $("grid");
-  order.forEach(({ it }, n) => {
-    const c = view.get(it.id).col;
-    if (grid.children[n] !== c) grid.insertBefore(c, grid.children[n] || null);
-  });
+  list.filter(li => shown(itemOf(li)));
+  list.sort("i", { sortFunction: (a, b) => {
+    const x = itemOf(a), y = itemOf(b);
+    return isBought(x.id) - isBought(y.id)
+      || (sortBy === "off" ? pctOff(y) - pctOff(x) : sortBy === "low" ? total(x) - total(y) : sortBy === "high" ? total(y) - total(x) : 0)
+      || a.values().i - b.values().i;
+  } });
 }
 let sortedOnce = false;
+let touched = false;           // the visitor has started to use the page (a finger scrolling counts)
+for (const e of ["touchstart", "pointerdown", "wheel", "keydown"]) addEventListener(e, () => { touched = true; }, { once: true, passive: true });
 function paintAll() {
   for (const it of ITEMS) { paintPrice(it); paintBought(it); }
-  // Sorted once, at the first answer. If that one failed, the cards stay where they are: no jump under a finger later.
-  if (!sortedOnce && storeOk !== null) { sortedOnce = true; if (storeOk) reorder(); }
-  let any = false;
-  for (const it of ITEMS) {
-    const c = view.get(it.id).col;
-    c.hidden = !shown(it);
-    any = any || !c.hidden;
+  // Sorted once, at the first answer. If that one failed, or the visitor is already using the page, the cards
+  // stay where they are: no jump under a finger.
+  if (!sortedOnce && storeOk !== null) {
+    sortedOnce = true;
+    const inUse = touched || $("grid").contains(document.activeElement) || [...view.values()].some(v => v.armed || v.busy);
+    if (storeOk && !inUse) reorder();
   }
-  $("empty").hidden = any;
 
   const n = ITEMS.filter(it => isBought(it.id)).length;
   $("track").hidden = kimi || storeOk !== true;
@@ -443,27 +429,21 @@ function paintAll() {
 }
 
 /* ---------- Controls ---------- */
-const CATS = ["All", ...new Set(ITEMS.map(it => it.cat))];
-const CAT_ICON = { All: "🎁", Sleep: "😴", Gaming: "🎮", Winter: "❄️", Everyday: "🔑", Kitchen: "🍳", Pets: "🐾" };
-for (const cat of CATS) {
-  const b = el("button", "btn btn-outline-light flex-shrink-0" + (cat === "All" ? " active" : ""), (CAT_ICON[cat] || "") + " " + cat);
-  b.type = "button";
-  b.setAttribute("aria-pressed", String(cat === "All"));
-  b.addEventListener("click", () => {
-    filterCat = cat;
-    for (const x of $("chips").children) { x.setAttribute("aria-pressed", String(x === b)); x.classList.toggle("active", x === b); }
-    reorder(); paintAll();
-  });
-  $("chips").append(b);
-}
+// The category buttons are Bootstrap's radio button group, written out in index.html.
+const catNow = () => { const r = $("chips").querySelector("input:checked"); return r ? r.value : "All"; };
+$("chips").addEventListener("change", () => {
+  filterCat = catNow(); reorder(); paintAll();
+  const r = $("chips").querySelector("input:checked");   // chosen with the arrow keys: bring its button into view
+  if (r) r.nextElementSibling.scrollIntoView({ block: "nearest", inline: "nearest" });
+});
 function paintBudget() {
   const b = $("budget");
   $("budgetOut").textContent = Number(b.value) >= Number(b.max) ? "any" : "≤ $" + b.value;
 }
-$("budget").addEventListener("input", () => { paintBudget(); paintAll(); });
+$("budget").addEventListener("input", () => { paintBudget(); reorder(); paintAll(); });
 $("sort").addEventListener("change", e => { sortBy = e.target.value; reorder(); paintAll(); });
 $("santa").addEventListener("click", () => {
-  const pool = ITEMS.filter(it => shown(it) && !isBought(it.id));
+  const pool = list.visibleItems.map(itemOf).filter(it => !isBought(it.id));
   if (!pool.length) { say("Nothing left to pick with these filters."); return; }
   const it = pool[Math.floor(Math.random() * pool.length)], c = view.get(it.id).card;
   c.scrollIntoView({ block: "center", behavior: calm.matches ? "auto" : "smooth" });
@@ -544,8 +524,9 @@ $("snowBtn").addEventListener("click", () => { snowOn = !snowOn; lsSet("xmas-sno
 calm.addEventListener("change", runSnow);
 
 /* ---------- Start ---------- */
-for (const it of ITEMS) $("grid").append(makeCard(it));
-sortBy = $("sort").value || "off";   // a browser may bring back the choice of the last visit
+for (const li of list.items) wire(li);
+sortBy = $("sort").value || "off";   // a browser may bring back the choices of the last visit
+filterCat = catNow();
 reorder();
 paintBudget(); paintCount(); runSnow(); paintAll();
 refreshBought(); refreshPrices();

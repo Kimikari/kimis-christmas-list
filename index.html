@@ -1,79 +1,180 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
-<title>Kimi's Christmas List</title>
-<meta name="description" content="Kimi's Christmas list: what to get, where to buy it, and what is already bought.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%84%3C/text%3E%3C/svg%3E">
-<!-- The whole look of this page is Bootstrap 5.0.0 (lib/bootstrap.min.css, unchanged). The page has no style sheet
-     of its own: every class below is one of Bootstrap's. Who wrote what: CREDITS.txt -->
-<link rel="stylesheet" href="lib/bootstrap.min.css">
-</head>
-<body class="bg-success">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Kimi's Christmas list: what to get, where to buy it, and what is already bought.">
+    <meta name="robots" content="noindex">
+    <title>Kimi's Christmas List</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%84%3C/text%3E%3C/svg%3E">
 
-<header class="container text-center text-white pt-4 pb-3">
-  <h1 class="display-5 fw-bold"><button class="btn btn-link p-0 fs-1 text-decoration-none align-baseline" id="tree" type="button" aria-label="Throw confetti">🎄</button> Kimi's Christmas List</h1>
-  <p class="lead mb-2" id="count" role="timer" aria-live="off"></p>
-  <p class="mb-3" id="sub">Tap <b>Buy</b> to open the shop. After you order, tap <b>I bought this</b> so nobody buys it twice.</p>
-  <div class="row justify-content-center" id="track" hidden>
-    <div class="col-md-8 col-lg-6">
-      <div class="progress"><div class="progress-bar progress-bar-striped bg-danger" id="fill" role="progressbar" aria-valuemin="0" aria-labelledby="trackText"></div></div>
-      <p class="small mt-2 mb-0" id="trackText"></p>
+    <!-- An AI assistant adapted this page from the "Album" example of Bootstrap 5.0.0 (lib/album-example.html is
+         the original, unchanged). From the example: the menu that folds open, the bar with the name, the title
+         block, the grid of cards with the card's outer wrappers, and the footer. Written by the assistant with
+         Bootstrap's classes: the inside of the gift card, the category bar, the budget and sort controls and the
+         status lines. The page has no style sheet of its own. Who wrote what: CREDITS.txt -->
+
+    <!-- Bootstrap core CSS -->
+<link href="lib/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body class="bg-success">
+
+<header>
+  <div class="collapse bg-dark" id="navbarHeader">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-md-7 py-4">
+          <h4 class="text-white">About</h4>
+          <p class="text-white-50">A price tracker reads the shops' own pages about once an hour, so a price here can be up to an hour or so behind; the shop's checkout decides. A price with ≈ is not tracked. No link here is an affiliate link.</p>
+          <p class="text-white-50 mb-0" id="priceNote"></p>
+        </div>
+        <div class="col-sm-4 offset-md-1 py-4">
+          <h4 class="text-white">Only for Kimi</h4>
+          <ul class="list-unstyled">
+            <li><button class="btn btn-outline-light" type="button" id="kimiBtn" aria-pressed="false">🙈 I'm Kimi: hide what's bought</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+      <a href="#" class="navbar-brand d-flex align-items-center">
+        <span class="me-2" aria-hidden="true">🎄</span>
+        <strong>Kimi's Christmas List</strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Menu: about the prices, and Kimi's button">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
   </div>
 </header>
 
-<nav class="sticky-top bg-dark py-2 shadow" aria-label="Filter by category">
-  <div class="container d-flex flex-nowrap flex-md-wrap overflow-auto justify-content-md-center gap-2" id="chips" role="group"></div>
-</nav>
+<main>
 
-<div class="container text-white py-3">
-  <div class="row g-3 align-items-center justify-content-center">
-    <div class="col-12 col-sm-auto">
-      <label class="form-label mb-0" for="budget">Budget: <output class="fw-bold" id="budgetOut" for="budget">any</output></label>
-      <input type="range" class="form-range" id="budget" min="10" max="130" step="5" value="130">
+  <section class="py-5 text-center text-white container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light"><button class="btn btn-link p-0 fs-1 text-decoration-none align-baseline" id="tree" type="button" aria-label="Throw confetti">🎄</button> Kimi's Christmas List</h1>
+        <p class="lead" id="count" role="timer" aria-live="off"></p>
+        <p id="sub">Tap <b>Buy</b> to open the shop. After you order, tap <b>I bought this</b> so nobody buys it twice.</p>
+        <div id="track" hidden>
+          <div class="progress"><div class="progress-bar progress-bar-striped bg-danger" id="fill" role="progressbar" aria-valuemin="0" aria-labelledby="trackText"></div></div>
+          <p class="small mt-2" id="trackText"></p>
+        </div>
+        <p>
+          <button class="btn btn-danger my-2" id="santa" type="button">🎅 Pick one for me</button>
+          <button class="btn btn-outline-light my-2" id="snowBtn" type="button" aria-pressed="true">❄️ Snow</button>
+        </p>
+      </div>
     </div>
-    <div class="col-12 col-sm-auto">
-      <label class="visually-hidden" for="sort">Sort</label>
-      <select class="form-select" id="sort">
-        <option value="off">Sort: biggest discount</option>
-        <option value="low">Sort: price, low to high</option>
-        <option value="high">Sort: price, high to low</option>
-      </select>
+  </section>
+
+  <nav class="sticky-top bg-dark py-2 shadow-sm" aria-label="Filter by category">
+    <div class="container d-flex flex-nowrap flex-md-wrap overflow-auto justify-content-md-center gap-2 py-1" id="chips" role="group">
+      <input type="radio" class="btn-check" name="cat" id="cat1" value="All" autocomplete="off" checked>
+      <label class="btn btn-outline-light flex-shrink-0" for="cat1">🎁 All</label>
+      <input type="radio" class="btn-check" name="cat" id="cat2" value="Sleep" autocomplete="off">
+      <label class="btn btn-outline-light flex-shrink-0" for="cat2">😴 Sleep</label>
+      <input type="radio" class="btn-check" name="cat" id="cat3" value="Gaming" autocomplete="off">
+      <label class="btn btn-outline-light flex-shrink-0" for="cat3">🎮 Gaming</label>
+      <input type="radio" class="btn-check" name="cat" id="cat4" value="Winter" autocomplete="off">
+      <label class="btn btn-outline-light flex-shrink-0" for="cat4">❄️ Winter</label>
+      <input type="radio" class="btn-check" name="cat" id="cat5" value="Everyday" autocomplete="off">
+      <label class="btn btn-outline-light flex-shrink-0" for="cat5">🔑 Everyday</label>
+      <input type="radio" class="btn-check" name="cat" id="cat6" value="Kitchen" autocomplete="off">
+      <label class="btn btn-outline-light flex-shrink-0" for="cat6">🍳 Kitchen</label>
+      <input type="radio" class="btn-check" name="cat" id="cat7" value="Pets" autocomplete="off">
+      <label class="btn btn-outline-light flex-shrink-0" for="cat7">🐾 Pets</label>
     </div>
-    <div class="col-12 col-sm-auto d-grid">
-      <button class="btn btn-danger" id="santa" type="button">🎅 Pick one for me</button>
+  </nav>
+
+  <div class="album py-5" id="gifts">
+    <div class="container">
+
+      <div class="row g-3 align-items-center justify-content-center text-white mb-4">
+        <div class="col-12 col-sm-auto">
+          <label class="form-label mb-0" for="budget">Budget: <output class="fw-bold" id="budgetOut" for="budget">any</output></label>
+          <input type="range" class="form-range" id="budget" min="10" max="130" step="5" value="130">
+        </div>
+        <div class="col-12 col-sm-auto">
+          <label class="visually-hidden" for="sort">Sort</label>
+          <select class="form-select" id="sort">
+            <option value="off">Sort: biggest discount</option>
+            <option value="low">Sort: price, low to high</option>
+            <option value="high">Sort: price, high to low</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="banner" hidden><div class="alert alert-warning" id="bannerText"></div></div>
+
+      <div class="list row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="grid"></div>
+      <p class="text-white text-center py-5" id="empty" hidden>Nothing fits that. Raise the budget or pick another category. ☃️</p>
     </div>
   </div>
-</div>
 
-<main class="container pb-4">
-  <div id="banner" hidden><div class="alert alert-warning" id="bannerText"></div></div>
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3" id="grid"></div>
-  <p class="text-white text-center py-5" id="empty" hidden>Nothing fits that. Raise the budget or pick another category. ☃️</p>
 </main>
+
+<!-- One gift card. Its outer wrappers (col, card, card-body) are the album's; its inside was written for this list.
+     List.js (lib/list.min.js) makes a copy of it for every gift and fills in the name, the category and the shop;
+     app.js fills in the rest. It is kept outside the list and hidden. -->
+<div hidden>
+        <div class="col" id="card-tpl">
+          <div class="card shadow-sm h-100">
+            <div class="photo ratio ratio-4x3 border-bottom">
+              <div class="d-flex align-items-center justify-content-center p-3 bg-white rounded-top"><img class="mw-100 mh-100" alt="" loading="lazy" decoding="async"></div>
+            </div>
+            <span class="off badge bg-danger fs-6 position-absolute top-0 end-0 m-2"></span>
+
+            <div class="card-body d-flex flex-column">
+              <small class="cat text-muted text-uppercase"></small>
+              <h2 class="name card-title h6 fw-bold"></h2>
+              <p class="wrapped fw-bold text-center my-2">🎁 Already bought</p>
+              <div class="prices mb-1">
+                <span class="now fs-4 fw-bold text-danger me-2"></span>
+                <small class="was text-muted me-2"><s class="wasnum"></s> <span class="waslabel"></span></small>
+                <span class="save badge rounded-pill bg-success me-1"></span>
+                <span class="prime badge rounded-pill bg-warning text-dark">needs Prime</span>
+              </div>
+              <p class="fresh small text-muted mb-2"></p>
+              <ul class="tags list-group list-group-flush small mb-3"></ul>
+              <div class="d-grid gap-2 mt-auto">
+                <a class="buy btn btn-success" target="_blank" rel="noopener noreferrer">Buy at <span class="shopname"></span> ↗</a>
+                <button type="button" class="got btn"></button>
+                <p class="msg" role="status"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+</div>
 <noscript><p class="text-white text-center p-4">This page needs JavaScript to show the list.</p></noscript>
 <p class="visually-hidden" id="live" role="status" aria-live="polite"></p>
 
-<footer class="container text-white text-center small pb-5">
-  <p id="priceNote"></p>
-  <p>A price tracker reads the shops' own pages about once an hour, so a price here can be up to an hour or so behind; the shop's checkout decides. A price with ≈ is not tracked. No link here is an affiliate link.</p>
-  <p class="d-flex flex-wrap justify-content-center gap-2">
-    <button class="btn btn-outline-light" type="button" id="snowBtn" aria-pressed="true">❄️ Snow</button>
-    <button class="btn btn-outline-light" type="button" id="kimiBtn" aria-pressed="false">🙈 I'm Kimi: hide what's bought</button>
-  </p>
-  <p class="mb-0">Styles: <a class="link-light" href="https://getbootstrap.com/docs/5.0/">Bootstrap</a>.
-    Snow: <a class="link-light" href="https://www.schillmania.com/projects/snowstorm/">Snowstorm</a> by Scott Schiller.
-    Countdown: <a class="link-light" href="http://countdownjs.org/">countdown.js</a> by Stephen M. McKamey.
-    Confetti: <a class="link-light" href="https://github.com/catdad/canvas-confetti">canvas-confetti</a> by Kiril Vatev.
-    <a class="link-light" href="CREDITS.txt">Credits and licences</a></p>
+<footer class="text-white py-5">
+  <div class="container">
+    <p class="float-end mb-1">
+      <a class="link-light" href="#">Back to top</a>
+    </p>
+    <p class="mb-1">Prices can be up to an hour or so behind; the shop's checkout decides. More about the prices, and Kimi's button, are in the menu (☰) at the top.</p>
+    <p class="mb-1">Layout adapted from the <a class="link-light" href="https://getbootstrap.com/docs/5.0/examples/album/">Bootstrap 5.0.0 Album example</a>, &copy; Bootstrap (Mark Otto, Jacob Thornton, and Bootstrap contributors), <a class="link-light" href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>. The texts, colors and pictures were changed, and the inside of the cards and the list's controls were added, for this list.</p>
+    <p class="mb-0">Styles and menu: <a class="link-light" href="https://getbootstrap.com/docs/5.0/">Bootstrap</a>.
+      Cards, filter and sort: <a class="link-light" href="https://listjs.com/">List.js</a> by Jonny Strömberg.
+      Snow: <a class="link-light" href="https://www.schillmania.com/projects/snowstorm/">Snowstorm</a> by Scott Schiller.
+      Countdown: <a class="link-light" href="http://countdownjs.org/">countdown.js</a> by Stephen M. McKamey.
+      Confetti: <a class="link-light" href="https://github.com/catdad/canvas-confetti">canvas-confetti</a> by Kiril Vatev.
+      <a class="link-light" href="CREDITS.txt">Credits and licences</a></p>
+  </div>
 </footer>
 
-<script src="lib/snowstorm.js"></script>
-<script src="lib/countdown.js"></script>
-<script src="lib/confetti.browser.js"></script>
-<script src="app.js"></script>
-</body>
+
+    <script src="lib/bootstrap.bundle.min.js"></script>
+    <script src="lib/list.min.js"></script>
+    <script src="lib/snowstorm.js"></script>
+    <script src="lib/countdown.js"></script>
+    <script src="lib/confetti.browser.js"></script>
+    <script src="app.js"></script>
+
+  </body>
 </html>

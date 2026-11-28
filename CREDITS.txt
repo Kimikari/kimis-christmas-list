@@ -3,7 +3,7 @@ Kimi's Christmas List: who wrote what
 
 COPIED, UNCHANGED, FROM PEOPLE (folder lib/)
 
-Each file is the published release, byte for byte. All four were published before GitHub Copilot's
+Each file is the published release, byte for byte. All were published before GitHub Copilot's
 first preview (29 June 2021), which is why these versions were chosen. The SHA-256 lets anyone compare
 a file here with the one at its source.
 
@@ -36,20 +36,63 @@ a file here with the one at its source.
    Source:  https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.2/dist/confetti.browser.js
    SHA-256: b3617dd78dc99e6bb7ec65e8b36b9441a13871a51d9efcf0c6276ea2b3b9523e
 
+5. Bootstrap 5.0.0 JavaScript bundle: opens and closes the menu at the top of the page
+   By the Bootstrap Authors. Published 5 May 2021. It includes Popper 2.9.2
+   ((c) 2019 Federico Zivolo, MIT, see lib/popper-LICENSE.txt).
+   Licence: MIT, see lib/bootstrap-LICENSE.txt
+   File:    lib/bootstrap.bundle.min.js
+   Source:  https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+   SHA-256: 325d19f9a1f62ad82f9f382a877f42bf447c8cbb293dd7cd2c03cf3bcf2f146a
+
+6. List.js 2.3.1: makes a card for every gift from the one card written in index.html, puts the cards
+   in order and takes the filtered ones out of the page
+   By Jonny Strömberg. Published 17 January 2021. It includes string-natural-compare 2.0.3
+   (by Nathan Woltman, MIT, see lib/string-natural-compare-LICENSE.txt).
+   Licence: MIT, see lib/listjs-LICENSE.txt
+   File:    lib/list.min.js
+   Source:  https://cdn.jsdelivr.net/npm/list.js@2.3.1/dist/list.min.js
+   Date:    https://registry.npmjs.org/list.js
+   SHA-256: 34456f18d306a85bece9a7462d98e6e6c2e072e5fdac64e0d70946b40d5feccf
+
+7. Bootstrap 5.0.0 "Album" example: the original page that index.html was made from (kept here to
+   compare; the site does not load it)
+   (c) Bootstrap: Mark Otto, Jacob Thornton, and Bootstrap contributors. Published 5 May 2021.
+   Licence: Creative Commons Attribution 3.0, https://creativecommons.org/licenses/by/3.0/
+            (Bootstrap's examples are part of its documentation)
+   File:    lib/album-example.html
+   Source:  bootstrap-5.0.0-examples/album/index.html in
+            https://github.com/twbs/bootstrap/releases/download/v5.0.0/bootstrap-5.0.0-examples.zip
+   SHA-256: e70bb173438e51a6ea6428ad44f5f8500c2ae4a47acc0e8c19e324fb2a2338ab
+
 What this shows and what it cannot: a release date before Copilot, a named author and an unchanged
 file are good evidence that people wrote the code. Simpler code-completion tools existed earlier, and
 nobody can prove how any code was typed.
 
+ADAPTED FROM A PERSON'S PAGE BY AN AI ASSISTANT
+
+- index.html: the page's structure. It is the Album example above (item 7), changed for this list by
+  the assistant; it is not an unchanged copy.
+  Kept from the example: the order of the page (menu that folds open, bar with the name, title block,
+  album of cards in a grid, footer with "Back to top"), and the tags and Bootstrap class names of those
+  parts.
+  Changed: the words (only "About" and "Back to top" are the example's); green and white instead of gray; the example's placeholder pictures and its
+  small style block are gone; the example's nine cards became one card that List.js copies.
+  Added by the assistant, from Bootstrap's own parts (radio button group, range, select, progress bar,
+  alert, badges, list group): the category bar, the budget and sort controls, the counter of bought
+  gifts, the warning line, and the inside of the card (photo, prices, notes, two buttons).
+  Compare index.html with lib/album-example.html to see exactly what differs.
+
 NOT COPIED: WRITTEN BY AN AI ASSISTANT
 
-- index.html: the page's structure and its words. It has no style sheet of its own; it only uses
-  Bootstrap's class names, so which Bootstrap parts go where was still chosen by the assistant.
-- app.js, all of it: the gift list, how a card is put together, the filter, budget and sort, the
-  "I bought this" button and its shared list, the loading of the tracked prices, and the lines that
-  switch the libraries above on (their settings, the confetti colors).
+- app.js, all of it (about 530 lines, 70 of them the gift list): the gift list itself; the rules of
+  the filter, the budget and the sort (List.js carries them out); what a card shows about its price and when it turns red; the
+  "I bought this" button and its shared list; the loading and checking of the tracked prices; and the
+  lines that switch the libraries above on (their settings, the confetti colors).
 - tools/prices.mjs and .github/workflows/prices.yml: the hourly price tracker.
+- The instructions and labels on the page. (The product names are the makers'.)
 
-These parts are specific to this list.
+No ready-made library was found that does these parts for this list and its store, so they were not
+replaced.
 
 PHOTOS
 
